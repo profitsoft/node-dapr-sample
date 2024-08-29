@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
-import { TenantController } from "./tenant.controller";
-import { TenantService } from "./tenant.service";
+import { TenantController } from "@app/tenant/tenant.controller";
+import { TenantService } from "@app/tenant/tenant.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { TenantEntity } from "./tenant.entity";
+import { TenantEntity } from "@app/tenant/tenant.entity";
 
 @Module({
     imports: [TypeOrmModule.forFeature([TenantEntity])],
