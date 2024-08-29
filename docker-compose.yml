@@ -1,10 +1,8 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  node-dapr-sample:
+    build: .
     container_name: node-dapr-sample
     ports:
       - "3000:3000"
@@ -14,13 +12,9 @@ services:
       DATABASE_NAME: "node-dapr-sample"
       DATABASE_USERNAME: "postgres"
       DATABASE_PASSWORD: "postgres"
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    networks:
-      - app-network
-    command: npm run start:dev
+    command: npm run start:prod
 
 networks:
-  app-network:
+  default:
+    name: app-network
     driver: bridge
