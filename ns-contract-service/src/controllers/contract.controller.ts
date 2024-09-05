@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { ContractService } from '../services/contract.service';
 import { Contract } from '../entities/contract.entity';
 
@@ -19,6 +19,11 @@ export class ContractController {
   @Post()
   create(@Body() contract: Contract): Promise<Contract> {
     return this.contractService.create(contract);
+  }
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() contract: Partial<Contract>): Promise<Contract> {
+    return this.contractService.update(id, contract);
   }
 
   @Delete(':id')

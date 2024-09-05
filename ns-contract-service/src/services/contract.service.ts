@@ -26,6 +26,11 @@ export class ContractService {
     return this.contractRepository.save(contract);
   }
 
+  async update(id: string, contract: Partial<Contract>): Promise<Contract> {
+    await this.contractRepository.update(id, contract);
+    return this.findOne(id);
+  }
+
   async remove(id: string): Promise<void> {
     await this.contractRepository.delete(id);
   }
