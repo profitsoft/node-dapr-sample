@@ -1,11 +1,15 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export const testDatabaseConfig: TypeOrmModuleOptions = {
-  type: 'sqlite',
-  database: ':memory:',
+  type: 'postgres',
+  host: 'localhost',
+  port: 5433,
+  username: 'postgres',
+  password: 'master',
+  database: 'node-dapr-sample-test',
   dropSchema: true,
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   synchronize: true,
   autoLoadEntities: true,
+  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
 };
   

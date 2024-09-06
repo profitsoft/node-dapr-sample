@@ -1,24 +1,28 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ContractModule } from './modules/contract.module';
-import { testDatabaseConfig } from './ormconfig.test';
+import { ContractModule } from './contracts/contract.module';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(
-      process.env.NODE_ENV === 'test'
-        ? testDatabaseConfig
-        : {
-            type: 'postgres',
-            host: 'db',
-            port: 5432,
-            username: 'postgres',
-            password: 'master',
-            database: 'node-dapr-sample',
-            autoLoadEntities: true,
-            synchronize: true,
-          },
-    ),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DATABASE_HOST'),
+        port: configService.get<number>('DATABASE_PORT'),
+        username: configService.get('DATABASE_USER'),
+        password: configService.get('DATABASE_PASSWORD'),
+        database: configService.get('DATABASE_NAME'),
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
+    }),
     ContractModule,
   ],
 })

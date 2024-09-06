@@ -10,10 +10,23 @@ services:
       - "5432:5432"
     networks:
       - my-network
+
+  test-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: master
+      POSTGRES_DB: node-dapr-sample-test
+    ports:
+      - "5433:5432"
+    networks:
+      - my-network
+      
   app:
     build: .
     depends_on:
       - db
+      - test-db
     environment:
       DATABASE_HOST: db
       DATABASE_PORT: 5432
@@ -24,6 +37,7 @@ services:
       - "3000:3000"
     networks:
       - my-network
+
 networks:
   my-network:
     driver: bridge

@@ -3,17 +3,17 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Contract {
   @PrimaryGeneratedColumn('uuid')
-  id: string = '';
+  id!: string;
 
   @Column()
-  number: string = '';
+  number!: string;
 
   @Column()
-  signDate: Date = new Date(); 
+  signDate!: Date; 
 
   @Column()
-  clientId: string = '';
+  clientId!: string;
 
   @Column()
-  tenantId: string = '';
+  tenantId!: string;
 }
