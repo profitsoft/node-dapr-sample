@@ -1,0 +1,14 @@
+
+.container {
+    background: linear-gradient(to bottom, #ECF2FF, #ffffff);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #4a5568;
+}
+
+.content {
+    position: absolute;
+}
