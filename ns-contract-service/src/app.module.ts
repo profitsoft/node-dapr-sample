@@ -8,20 +8,25 @@ import { ConfigService } from '@nestjs/config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DATABASE_HOST'),
-        port: configService.get<number>('DATABASE_PORT'),
-        username: configService.get('DATABASE_USER'),
-        password: configService.get('DATABASE_PASSWORD'),
-        database: configService.get('DATABASE_NAME'),
-        autoLoadEntities: true,
-        synchronize: true,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const isTestEnv = process.env.NODE_ENV === 'test';
+        return {
+          type: 'postgres',
+          host: configService.get<string>(isTestEnv ? 'DATABASE_HOST_TEST' : 'DATABASE_HOST'),
+          port: configService.get<number>(isTestEnv ? 'DATABASE_PORT_TEST' : 'DATABASE_PORT'),
+          username: configService.get<string>(isTestEnv ? 'DATABASE_USER_TEST' : 'DATABASE_USER'),
+          password: configService.get<string>(isTestEnv ? 'DATABASE_PASSWORD_TEST' : 'DATABASE_PASSWORD'),
+          database: configService.get<string>(isTestEnv ? 'DATABASE_NAME_TEST' : 'DATABASE_NAME'),
+          autoLoadEntities: true,
+          synchronize: true,
+          dropSchema: isTestEnv,
+        };
+      },
     }),
     ContractModule,
   ],

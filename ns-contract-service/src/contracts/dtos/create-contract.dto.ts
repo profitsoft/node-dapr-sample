@@ -19,22 +19,3 @@ export class CreateContractDto {
   @IsNotEmpty()
   tenantId!: string;
 }
-
-export class UpdateContractDto {
-  @IsString()
-  @IsNotEmpty()
-  number!: string;
-
-  @IsDate()
-  @IsNotEmpty()
-  @Type(() => Date)
-  signDate!: Date;
-
-  @IsString()
-  @IsNotEmpty()
-  clientId!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  tenantId!: string;
-}

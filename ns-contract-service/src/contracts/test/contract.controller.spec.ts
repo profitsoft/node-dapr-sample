@@ -1,11 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from '../app.module';
+import { AppModule } from '../../app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { DataSource } from 'typeorm';
+import { getDataSourceToken } from '@nestjs/typeorm';
 
 describe('ContractController (e2e)', () => {
   let app: INestApplication;
+  let dataSource: DataSource;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -19,6 +22,12 @@ describe('ContractController (e2e)', () => {
       forbidNonWhitelisted: true,
     }));
     await app.init();
+
+    dataSource = moduleFixture.get<DataSource>(getDataSourceToken());
+  });
+
+  afterEach(async () => {
+    await dataSource.synchronize(true);
   });
 
   afterAll(async () => {

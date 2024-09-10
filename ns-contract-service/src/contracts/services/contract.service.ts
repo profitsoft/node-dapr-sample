@@ -2,7 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Contract } from '../entities/contract.entity';
-import { CreateContractDto, UpdateContractDto } from '../dtos/contract.dto';
+import { CreateContractDto } from '../dtos/create-contract.dto';
+import { UpdateContractDto } from '../dtos/update-contract.dto';
 
 @Injectable()
 export class ContractService {
@@ -11,8 +12,8 @@ export class ContractService {
     private contractRepository: Repository<Contract>,
   ) {}
 
-  findAll(): Promise<Contract[]> {
-    return this.contractRepository.find();
+  async findAll(): Promise<Contract[]> {
+    return await this.contractRepository.find();
   }
 
   async findOne(id: string): Promise<Contract> {
@@ -23,15 +24,15 @@ export class ContractService {
     return contract;
   }
 
-  create(createContractDto: CreateContractDto): Promise<Contract> {
+  async create(createContractDto: CreateContractDto): Promise<Contract> {
     const contract = this.contractRepository.create(createContractDto);
-    return this.contractRepository.save(contract);
+    return await this.contractRepository.save(contract);
   }
 
   async update(id: string, updateContractDto: UpdateContractDto): Promise<Contract> {
     const contract = await this.findOne(id);
     Object.assign(contract, updateContractDto);
-    return this.contractRepository.save(contract);
+    return await this.contractRepository.save(contract);
   }
 
   async remove(id: string): Promise<void> {
