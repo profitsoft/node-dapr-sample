@@ -1,12 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import request from 'supertest';
-import { AppModule } from '../app.module';
-import { ValidationPipe } from '@nestjs/common';
-import { DataSource } from 'typeorm';
-import { getDataSourceToken } from '@nestjs/typeorm';
+import { Test, TestingModule } from "@nestjs/testing";
+import { INestApplication } from "@nestjs/common";
+import request from "supertest";
+import { AppModule } from "../app.module";
+import { ValidationPipe } from "@nestjs/common";
+import { DataSource } from "typeorm";
+import { getDataSourceToken } from "@nestjs/typeorm";
 
-describe('ContractController (e2e)', () => {
+describe("ContractController (e2e)", () => {
   let app: INestApplication;
   let dataSource: DataSource;
 
@@ -16,11 +16,13 @@ describe('ContractController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      forbidNonWhitelisted: true,
-    }));
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      }),
+    );
     await app.init();
 
     dataSource = moduleFixture.get<DataSource>(getDataSourceToken());
@@ -34,36 +36,36 @@ describe('ContractController (e2e)', () => {
     await app.close();
   });
 
-  it('/contracts (GET)', () => {
+  it("/contracts (GET)", () => {
     return request(app.getHttpServer())
-      .get('/contracts')
+      .get("/contracts")
       .expect(200)
       .expect([]);
   });
 
-  it('/contracts (POST)', () => {
+  it("/contracts (POST)", () => {
     return request(app.getHttpServer())
-      .post('/contracts')
+      .post("/contracts")
       .send({
-        number: '12345',
+        number: "12345",
         signDate: new Date(),
-        clientId: 'client1',
-        tenantId: 'tenant1',
+        clientId: "client1",
+        tenantId: "tenant1",
       })
       .expect(201)
       .then((response) => {
-        expect(response.body).toHaveProperty('id');
+        expect(response.body).toHaveProperty("id");
       });
   });
 
-  it('/contracts/:id (PUT)', () => {
+  it("/contracts/:id (PUT)", () => {
     return request(app.getHttpServer())
-      .post('/contracts')
+      .post("/contracts")
       .send({
-        number: '12345',
+        number: "12345",
         signDate: new Date(),
-        clientId: 'client1',
-        tenantId: 'tenant1',
+        clientId: "client1",
+        tenantId: "tenant1",
       })
       .expect(201)
       .then((response) => {
@@ -71,61 +73,66 @@ describe('ContractController (e2e)', () => {
         return request(app.getHttpServer())
           .put(`/contracts/${contractId}`)
           .send({
-            number: '54321',
+            number: "54321",
             signDate: new Date(),
-            clientId: 'client1',
-            tenantId: 'tenant1',
+            clientId: "client1",
+            tenantId: "tenant1",
           })
           .expect(200)
           .then((response) => {
-            expect(response.body.number).toBe('54321');
+            expect(response.body.number).toBe("54321");
           });
-      });
-  });  
-
-  it('/contracts/:id (GET) - not found', () => {
-    return request(app.getHttpServer())
-      .get('/contracts/e9d8f97a-5d5d-4b7f-9fbc-c3f633b5e18f')
-      .expect(404)
-      .then((response) => {
-        expect(response.body.message).toBe('Contract with id e9d8f97a-5d5d-4b7f-9fbc-c3f633b5e18f not found');
       });
   });
 
-  it('/contracts (POST) - bad request', () => {
+  it("/contracts/:id (GET) - not found", () => {
+    return request(app.getHttpServer())
+      .get("/contracts/e9d8f97a-5d5d-4b7f-9fbc-c3f633b5e18f")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.message).toBe(
+          "Contract with id e9d8f97a-5d5d-4b7f-9fbc-c3f633b5e18f not found",
+        );
+      });
+  });
+
+  it("/contracts (POST) - bad request", () => {
     const testData = { signDate: new Date() };
     return request(app.getHttpServer())
-      .post('/contracts')
+      .post("/contracts")
       .send(testData)
       .expect(400)
       .then((response) => {
-        expect(response.body.message).toContain('clientId should not be empty');
-        expect(response.body.message).toContain('tenantId should not be empty');
+        expect(response.body.message).toContain("clientId should not be empty");
+        expect(response.body.message).toContain("tenantId should not be empty");
       });
   });
 
-  it('/contracts/:id (PUT) - not found', () => {
+  it("/contracts/:id (PUT) - not found", () => {
     return request(app.getHttpServer())
-      .put('/contracts/e9d8f97a-5d5d-4b7f-9fbc-c3f633b5e18f')
+      .put("/contracts/e9d8f97a-5d5d-4b7f-9fbc-c3f633b5e18f")
       .send({
-        number: '54321',
+        number: "54321",
         signDate: new Date(),
-        clientId: 'client1',
-        tenantId: 'tenant1',
+        clientId: "client1",
+        tenantId: "tenant1",
       })
       .expect(404)
       .then((response) => {
-        expect(response.body.message).toBe('Contract with id e9d8f97a-5d5d-4b7f-9fbc-c3f633b5e18f not found');
+        expect(response.body.message).toBe(
+          "Contract with id e9d8f97a-5d5d-4b7f-9fbc-c3f633b5e18f not found",
+        );
       });
   });
-  
 
-  it('/contracts/:id (DELETE) - not found', () => {
+  it("/contracts/:id (DELETE) - not found", () => {
     return request(app.getHttpServer())
-      .delete('/contracts/e9d8f97a-5d5d-4b7f-9fbc-c3f633b5e18f')
+      .delete("/contracts/e9d8f97a-5d5d-4b7f-9fbc-c3f633b5e18f")
       .expect(404)
       .then((response) => {
-        expect(response.body.message).toBe('Contract with id e9d8f97a-5d5d-4b7f-9fbc-c3f633b5e18f not found');
+        expect(response.body.message).toBe(
+          "Contract with id e9d8f97a-5d5d-4b7f-9fbc-c3f633b5e18f not found",
+        );
       });
   });
 });

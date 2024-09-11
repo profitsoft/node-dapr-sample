@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import request from 'supertest';
-import { AppModule } from '../src/app.module';
+import { Test, TestingModule } from "@nestjs/testing";
+import { INestApplication } from "@nestjs/common";
+import request from "supertest";
+import { AppModule } from "../src/app.module";
 
-describe('AppModule (e2e)', () => {
+describe("AppModule (e2e)", () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -21,8 +21,8 @@ describe('AppModule (e2e)', () => {
 
   it('should respond with "Hello World!" on GET /ping', () => {
     return request(app.getHttpServer())
-      .get('/ping')
+      .get("/ping")
       .expect(200)
-      .expect('Hello World!');
+      .expect("Hello World!");
   });
 });
