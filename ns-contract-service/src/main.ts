@@ -12,7 +12,9 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
   }));
 
-  const configService = app.get(ConfigService);
+  app.enableCors();
+
+  const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>('PORT') || 3000;
 
   console.log(`App is running on port ${port}`);

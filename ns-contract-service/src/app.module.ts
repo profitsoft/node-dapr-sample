@@ -2,7 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContractModule } from './contracts/contract.module';
+import { Contract } from './contracts/entities/contract.entity';
 import { ConfigService } from '@nestjs/config';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -15,6 +17,7 @@ import { ConfigService } from '@nestjs/config';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const isTestEnv = process.env.NODE_ENV === 'test';
+        const isDevEnv = process.env.NODE_ENV === 'development';
         return {
           type: 'postgres',
           host: configService.get<string>(isTestEnv ? 'DATABASE_HOST_TEST' : 'DATABASE_HOST'),
@@ -22,13 +25,15 @@ import { ConfigService } from '@nestjs/config';
           username: configService.get<string>(isTestEnv ? 'DATABASE_USER_TEST' : 'DATABASE_USER'),
           password: configService.get<string>(isTestEnv ? 'DATABASE_PASSWORD_TEST' : 'DATABASE_PASSWORD'),
           database: configService.get<string>(isTestEnv ? 'DATABASE_NAME_TEST' : 'DATABASE_NAME'),
-          autoLoadEntities: true,
-          synchronize: true,
+          autoLoadEntities: isDevEnv || isTestEnv,
+          entities: !isDevEnv && !isTestEnv ? [Contract] : [],
+          synchronize: isDevEnv || isTestEnv,
           dropSchema: isTestEnv,
         };
       },
     }),
     ContractModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
