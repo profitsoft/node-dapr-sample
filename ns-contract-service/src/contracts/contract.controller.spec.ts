@@ -5,12 +5,34 @@ import { AppModule } from "../app.module";
 import { ValidationPipe } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import { getDataSourceToken } from "@nestjs/typeorm";
+import { GenericContainer } from "testcontainers";
+import { config as dotenvConfig } from "dotenv";
+
+dotenvConfig({ path: ".env.test" });
 
 describe("ContractController (e2e)", () => {
   let app: INestApplication;
   let dataSource: DataSource;
+  let postgresContainer: any;
 
   beforeAll(async () => {
+    postgresContainer = await new GenericContainer("postgres")
+      .withEnvironment({
+        POSTGRES_DB: process.env.DATABASE_NAME_TEST!,
+        POSTGRES_USER: process.env.DATABASE_USER_TEST!,
+        POSTGRES_PASSWORD: process.env.DATABASE_PASSWORD_TEST!,
+      })
+      .withExposedPorts(5432)
+      .start();
+
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    const host = postgresContainer.getHost();
+    const port = postgresContainer.getMappedPort(5432);
+
+    process.env.DATABASE_HOST_TEST = host;
+    process.env.DATABASE_PORT_TEST = port.toString();
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
