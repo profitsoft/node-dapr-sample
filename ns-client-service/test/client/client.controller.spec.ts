@@ -5,11 +5,10 @@ import { DatabaseModule } from '../../src/db/database.module';
 import { ClientCreateDto } from '../../src/client/dto/client.createDto';
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
-import { response } from 'express';
 
 
 
-describe("Should create user with team", () => {
+describe("Client Controller Test", () => {
   let app: INestApplication
   let clientService: ClientService
 

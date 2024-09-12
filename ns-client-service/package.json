@@ -21,6 +21,10 @@
     "prettier:check": "prettier --check \\\"src/**/*.ts\\\" \\\"test/**/*.ts\\\"",
     "prettier:fix": "prettier --write \\\"src/**/*.ts\\\" \\\"test/**/*.ts\\\""
   },
+  "engines": {
+    "node": "20.17.0",
+    "npm": "10.8.2"
+  },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",

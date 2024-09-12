@@ -4,7 +4,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "module": "commonjs",
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./dist",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -13,9 +13,9 @@
     "skipLibCheck": true
   },
   "include": [
-    "ns-client-service/src/**/*.ts",
-    "ns-client-service/test/**/*.ts",
-    "src/globals.d.ts"
+    "./src/**/*.ts",
+    "./test/**/*.ts",
+    "./src/globals.d.ts"
   ],
   "exclude": ["node_modules"]
 }
