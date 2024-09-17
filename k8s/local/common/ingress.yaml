@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ns-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+    - hosts:
+        - node-sample.local
+      secretName: tls-secret  # This references the secret with the TLS cert
+  rules:
+    - host: node-sample.local
+      http:
+        paths:
+          - path: /api/contract-service
+            pathType: Prefix
+            backend:
+              service:
+                name: ns-contract-service
+                port:
+                  number: 80
+#          - path: /other-service
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: other-service
+#                port:
+#                  number: 80

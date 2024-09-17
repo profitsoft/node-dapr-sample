@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ns-contract-service
+  labels:
+    app: ns-contract-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ns-contract-service
+  template:
+    metadata:
+      labels:
+        app: ns-contract-service
+    spec:
+      containers:
+        - name: ns-contract-service
+          image: local/ns-contract-service:latest
+          imagePullPolicy: IfNotPresent   # Prevents pulling from remote if image exists locally
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_HOST
+              value: "postgre-contracts"
+            - name: DATABASE_PORT
+              value: "5432"
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: password
+            - name: DATABASE_NAME
+              value: "ns-contracts"
