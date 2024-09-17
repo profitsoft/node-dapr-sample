@@ -3,7 +3,8 @@ kind: Ingress
 metadata:
   name: ns-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   tls:
     - hosts:
@@ -13,8 +14,8 @@ spec:
     - host: node-sample.local
       http:
         paths:
-          - path: /api/contract-service
-            pathType: Prefix
+          - path: /api/contract-service(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: ns-contract-service

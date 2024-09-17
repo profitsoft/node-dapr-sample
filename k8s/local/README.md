@@ -55,3 +55,9 @@ Open `hosts` file with Administrator permissions (`C:\Windows\System32\drivers\e
 ```
 {minikube ip} node-sample.local
 ```
+
+When everything is done, you can open in your browser
+```
+https://node-sample.local/api/contract-service/contracts
+```
+It should return `[]` (empty contract list).
