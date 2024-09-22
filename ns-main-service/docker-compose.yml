@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: master
+      POSTGRES_DB: node-dapr-sample
+    ports:
+      - "5432:5432"
+    networks:
+      - my-network
+
+  app:
+    build: .
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "postgresql://postgres:master@db:5432/node-dapr-sample?schema=public"
+    ports:
+      - "3000:3000"
+    networks:
+      - my-network
+
+  test-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: testpass
+      POSTGRES_DB: node-dapr-test
+    ports:
+      - "5433:5432"
+    networks:
+      - my-network
+
+  test-app:
+    build: .
+    depends_on:
+      - test-db
+    environment:
+      DATABASE_URL: "postgresql://postgres:testpass@test-db:5432/node-dapr-test?schema=public"
+    networks:
+      - my-network
+    command: ["npm", "run", "test"]
+networks:
+  my-network:
+    driver: bridge

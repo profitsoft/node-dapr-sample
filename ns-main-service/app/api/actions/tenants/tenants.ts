@@ -1,5 +1,5 @@
-'use server'
-import dbClient from '@/api/actions/DbClient';
+'use server';
+import dbClient from '@/app/api/actions/DbClient';
 import logger from '@/lib/logger';
 import { z as validator } from 'zod';
 import { Tenant } from '@prisma/client';
@@ -41,11 +41,13 @@ async function getAllTenants(): Promise<TenantsResponse> {
   }
 }
 
-async function createTenant(data: Omit<Tenant, 'tenantId'>): Promise<TenantResponse> {
+async function createTenant(
+  data: Omit<Tenant, 'tenantId'>,
+): Promise<TenantResponse> {
   try {
     const createTenant = createTenantShema.parse({
       name: data.name,
-    })
+    });
     const tenant = await dbClient.tenant.create({
       data: createTenant,
     });
@@ -91,7 +93,7 @@ async function getTenantById(tenantId: number): Promise<TenantResponse> {
         status: 'OK',
         message: 'Tenant not found',
         data: null,
-      }
+      };
     }
   } catch (error) {
     logger.error('Error fetching tenant:', error);
@@ -146,11 +148,14 @@ async function deleteTenant(tenantId: number): Promise<TenantResponse> {
   }
 }
 
-async function updateTenant(tenantId: number, name: string): Promise<TenantResponse> {
+async function updateTenant(
+  tenantId: number,
+  name: string,
+): Promise<TenantResponse> {
   try {
     const updateTenant = createTenantShema.parse({
       name: name,
-    })
+    });
     const updated = await dbClient.tenant.update({
       where: { tenantId },
       data: updateTenant,
@@ -187,4 +192,4 @@ export {
   getAllTenants,
   getTenantById,
   updateTenant,
-}
+};

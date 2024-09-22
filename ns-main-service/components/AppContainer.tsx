@@ -1,8 +1,8 @@
-'use client'
-import { NextPage} from 'next';
+'use client';
+import { NextPage } from 'next';
 import { AppShell } from '@mantine/core';
 import NavBar from '@/components/NavBar';
-import classes from '@/styles/AppContainer.module.css';
+import classes from '@/components/AppContainer.module.css';
 
 interface AppContainerProps {
   children: React.ReactNode;
@@ -10,17 +10,11 @@ interface AppContainerProps {
 
 const AppContainer: NextPage<AppContainerProps> = ({ children }) => {
   return (
-    <AppShell
-      header={{ height: 64 }}
-      padding='0px'
-      className={classes.main}
-    >
+    <AppShell header={{ height: 64 }} className={classes.main}>
       <NavBar />
-      <AppShell.Main>
-        {children}
-      </AppShell.Main>
+      <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
   );
-}
+};
 
 export default AppContainer;

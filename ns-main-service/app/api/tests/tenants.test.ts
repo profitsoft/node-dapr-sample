@@ -1,11 +1,11 @@
-import { prisma } from '@/jest.setup';  // Імпортуємо prisma
+import { prisma } from '@/jest.setup';
 import {
   createTenant,
   getAllTenants,
   getTenantById,
   updateTenant,
   deleteTenant,
-} from '@/api/actions/tenants/tenants';
+} from '@/app/api/actions/tenants/tenants';
 import { TenantResponse } from '@/types/tenant';
 
 describe('Tenant API', () => {
@@ -16,7 +16,9 @@ describe('Tenant API', () => {
   });
 
   test('should create a tenant', async () => {
-    const response: TenantResponse = await createTenant({ name: 'Test Tenant' });
+    const response: TenantResponse = await createTenant({
+      name: 'Test Tenant',
+    });
     expect(response.status).toBe('OK');
     expect(response.data).toBeDefined();
     tenantId = response.data?.tenantId;
