@@ -1,5 +1,6 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { config as dotenvConfig } from "dotenv";
+import { Contract } from './contracts/contract.entity';
 
 dotenvConfig({ path: ".env.test" });
 
@@ -10,8 +11,8 @@ export const testDatabaseConfig: TypeOrmModuleOptions = {
   username: process.env.DATABASE_USER_TEST!,
   password: process.env.DATABASE_PASSWORD_TEST!,
   database: process.env.DATABASE_NAME_TEST!,
+  entities: [Contract],
   dropSchema: true,
   synchronize: true,
   autoLoadEntities: true,
-  entities: [__dirname + "/../**/*.entity{.ts,.js}"],
 };

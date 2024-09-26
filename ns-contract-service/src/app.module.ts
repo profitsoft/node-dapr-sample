@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ContractModule } from "./contracts/contract.module";
-import { Contract } from "./contracts/entities/contract.entity";
+import { Contract } from "./contracts/contract.entity";
 import { ConfigService } from "@nestjs/config";
 import { AppController } from "./app.controller";
 
@@ -10,6 +10,7 @@ import { AppController } from "./app.controller";
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      // TODO: Configure all env in src/config/config.ts when Google Cloud Datastore will be available.
       envFilePath: process.env.NODE_ENV === "test" ? ".env.test" : ".env",
     }),
     TypeOrmModule.forRootAsync({

@@ -1,7 +1,7 @@
 import { IsString, IsDate, IsNotEmpty } from "class-validator";
 import { Type } from "class-transformer";
 
-export class UpdateContractDto {
+export class ContractDto {
   @IsString()
   @IsNotEmpty()
   number!: string;
