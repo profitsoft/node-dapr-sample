@@ -1,19 +1,19 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ContractService } from './contract.service';
-import { Contract } from './contract.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-import { DataSource } from 'typeorm';
-import { testDatabaseConfig } from '../ormconfig.test';
-import { InternalServerErrorException } from '@nestjs/common';
-import { GenericContainer } from 'testcontainers';
+import { Test, TestingModule } from "@nestjs/testing";
+import { ContractService } from "./contract.service";
+import { Contract } from "./contract.entity";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ConfigModule } from "@nestjs/config";
+import { DataSource } from "typeorm";
+import { testDatabaseConfig } from "../ormconfig.test";
+import { InternalServerErrorException } from "@nestjs/common";
+import { GenericContainer } from "testcontainers";
 
-describe('ContractService', () => {
+describe("ContractService", () => {
   let service: ContractService;
   let dataSource: DataSource;
 
   beforeAll(async () => {
-    const postgresContainer = await new GenericContainer('postgres')
+    const postgresContainer = await new GenericContainer("postgres")
       .withEnvironment({
         POSTGRES_DB: process.env.DATABASE_NAME_TEST!,
         POSTGRES_USER: process.env.DATABASE_USER_TEST!,
@@ -32,7 +32,7 @@ describe('ContractService', () => {
       imports: [
         ConfigModule.forRoot({
           isGlobal: true,
-          envFilePath: '.env.test',
+          envFilePath: ".env.test",
         }),
         TypeOrmModule.forRoot(testDatabaseConfig),
         TypeOrmModule.forFeature([Contract]),
@@ -52,24 +52,24 @@ describe('ContractService', () => {
     await dataSource.destroy();
   });
 
-  describe('findAll', () => {
-    it('should return an empty array initially', async () => {
+  describe("findAll", () => {
+    it("should return an empty array initially", async () => {
       const contracts = await service.findAll();
       expect(contracts).toEqual([]);
     });
 
-    it('should return all contracts', async () => {
+    it("should return all contracts", async () => {
       const contract1 = await service.create({
-        number: '12345',
+        number: "12345",
         signDate: new Date(),
-        clientId: 'client1',
-        tenantId: 'tenant1',
+        clientId: "client1",
+        tenantId: "tenant1",
       });
       const contract2 = await service.create({
-        number: '67890',
+        number: "67890",
         signDate: new Date(),
-        clientId: 'client2',
-        tenantId: 'tenant2',
+        clientId: "client2",
+        tenantId: "tenant2",
       });
 
       const contracts = await service.findAll();
@@ -84,13 +84,13 @@ describe('ContractService', () => {
     });
   });
 
-  describe('findOne', () => {
-    it('should return the contract by ID', async () => {
+  describe("findOne", () => {
+    it("should return the contract by ID", async () => {
       const contract = await service.create({
-        number: '12345',
+        number: "12345",
         signDate: new Date(),
-        clientId: 'client1',
-        tenantId: 'tenant1',
+        clientId: "client1",
+        tenantId: "tenant1",
       });
 
       const foundContract = await service.findOne(contract.id);
@@ -98,37 +98,37 @@ describe('ContractService', () => {
       expect(foundContract).toEqual(contract);
     });
 
-    it('should throw InternalServerErrorException if contract not found', async () => {
-      await expect(service.findOne('non-existing-id')).rejects.toThrow(
+    it("should throw InternalServerErrorException if contract not found", async () => {
+      await expect(service.findOne("non-existing-id")).rejects.toThrow(
         InternalServerErrorException,
       );
     });
   });
 
-  describe('create', () => {
-    it('should create and return a new contract', async () => {
+  describe("create", () => {
+    it("should create and return a new contract", async () => {
       const createContractDto = {
-        number: '12345',
+        number: "12345",
         signDate: new Date(),
-        clientId: 'client1',
-        tenantId: 'tenant1',
+        clientId: "client1",
+        tenantId: "tenant1",
       };
 
       const contract = await service.create(createContractDto);
 
-      expect(contract).toHaveProperty('id');
+      expect(contract).toHaveProperty("id");
       expect(contract.number).toEqual(createContractDto.number);
     });
 
-    it('should throw InternalServerErrorException on error', async () => {
+    it("should throw InternalServerErrorException on error", async () => {
       await dataSource.destroy();
 
       await expect(
         service.create({
-          number: '12345',
+          number: "12345",
           signDate: new Date(),
-          clientId: 'client1',
-          tenantId: 'tenant1',
+          clientId: "client1",
+          tenantId: "tenant1",
         }),
       ).rejects.toThrow(InternalServerErrorException);
 
@@ -136,44 +136,44 @@ describe('ContractService', () => {
     });
   });
 
-  describe('update', () => {
-    it('should update and return the updated contract', async () => {
+  describe("update", () => {
+    it("should update and return the updated contract", async () => {
       const contract = await service.create({
-        number: '12345',
+        number: "12345",
         signDate: new Date(),
-        clientId: 'client1',
-        tenantId: 'tenant1',
+        clientId: "client1",
+        tenantId: "tenant1",
       });
 
       const updatedContract = await service.update(contract.id, {
-        number: '54321',
+        number: "54321",
         signDate: new Date(),
-        clientId: 'client1',
-        tenantId: 'tenant1',
+        clientId: "client1",
+        tenantId: "tenant1",
       });
 
-      expect(updatedContract.number).toEqual('54321');
+      expect(updatedContract.number).toEqual("54321");
     });
 
-    it('should throw InternalServerErrorException if contract not found', async () => {
+    it("should throw InternalServerErrorException if contract not found", async () => {
       await expect(
-        service.update('non-existing-id', {
-          number: '54321',
+        service.update("non-existing-id", {
+          number: "54321",
           signDate: new Date(),
-          clientId: 'client1',
-          tenantId: 'tenant1',
+          clientId: "client1",
+          tenantId: "tenant1",
         }),
       ).rejects.toThrow(InternalServerErrorException);
     });
   });
 
-  describe('remove', () => {
-    it('should delete the contract', async () => {
+  describe("remove", () => {
+    it("should delete the contract", async () => {
       const contract = await service.create({
-        number: '12345',
+        number: "12345",
         signDate: new Date(),
-        clientId: 'client1',
-        tenantId: 'tenant1',
+        clientId: "client1",
+        tenantId: "tenant1",
       });
 
       await service.remove(contract.id);
@@ -183,8 +183,8 @@ describe('ContractService', () => {
       );
     });
 
-    it('should throw InternalServerErrorException if contract not found', async () => {
-      await expect(service.remove('non-existing-id')).rejects.toThrow(
+    it("should throw InternalServerErrorException if contract not found", async () => {
+      await expect(service.remove("non-existing-id")).rejects.toThrow(
         InternalServerErrorException,
       );
     });

@@ -1,6 +1,6 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { config as dotenvConfig } from "dotenv";
-import { Contract } from './contracts/contract.entity';
+import { Contract } from "./contracts/contract.entity";
 
 dotenvConfig({ path: ".env.test" });
 

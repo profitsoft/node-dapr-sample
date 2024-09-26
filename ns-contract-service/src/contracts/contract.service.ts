@@ -1,9 +1,13 @@
-import { Injectable, NotFoundException, InternalServerErrorException } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Contract } from "./contract.entity";
 import { ContractDto } from "./dtos/contract.dto";
-import { plainToInstance } from 'class-transformer';
+import { plainToInstance } from "class-transformer";
 
 @Injectable()
 // TODO: Create a separate exception filter for handling exceptions from the contract repository when external services are involved.
@@ -18,7 +22,7 @@ export class ContractService {
     try {
       return await this.contractRepository.find();
     } catch (error) {
-      throw new InternalServerErrorException('Failed to retrieve contracts');
+      throw new InternalServerErrorException("Failed to retrieve contracts");
     }
   }
 
@@ -31,7 +35,7 @@ export class ContractService {
       }
       return contract;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to retrieve contract');
+      throw new InternalServerErrorException("Failed to retrieve contract");
     }
   }
 
@@ -42,7 +46,7 @@ export class ContractService {
       const newContract = this.contractRepository.create(contract);
       return await this.contractRepository.save(newContract);
     } catch (error) {
-      throw new InternalServerErrorException('Failed to create contract');
+      throw new InternalServerErrorException("Failed to create contract");
     }
   }
 
@@ -54,7 +58,7 @@ export class ContractService {
       Object.assign(contract, updatedData);
       return await this.contractRepository.save(contract);
     } catch (error) {
-      throw new InternalServerErrorException('Failed to update contract');
+      throw new InternalServerErrorException("Failed to update contract");
     }
   }
 
@@ -67,7 +71,7 @@ export class ContractService {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new InternalServerErrorException('Failed to delete contract');
+      throw new InternalServerErrorException("Failed to delete contract");
     }
   }
 }

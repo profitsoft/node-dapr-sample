@@ -13,9 +13,9 @@ import {
 import { ContractService } from "./contract.service";
 import { Contract } from "./contract.entity";
 import { ContractDto } from "./dtos/contract.dto";
-import { plainToInstance } from 'class-transformer';
+import { plainToInstance } from "class-transformer";
 
-@Controller('contracts')
+@Controller("contracts")
 export class ContractController {
   constructor(private readonly contractService: ContractService) {}
 
@@ -26,10 +26,10 @@ export class ContractController {
     return plainToInstance(ContractDto, contracts);
   }
 
-  @Get('/:id')
+  @Get("/:id")
   @HttpCode(HttpStatus.OK)
   async findOne(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param("id", new ParseUUIDPipe()) id: string,
   ): Promise<ContractDto> {
     const contract = await this.contractService.findOne(id);
     return plainToInstance(ContractDto, contract);
@@ -37,26 +37,24 @@ export class ContractController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(
-    @Body() createContractDto: ContractDto,
-  ): Promise<ContractDto> {
+  async create(@Body() createContractDto: ContractDto): Promise<ContractDto> {
     const contract = await this.contractService.create(createContractDto);
     return plainToInstance(ContractDto, contract);
   }
 
-  @Put('/:id')
+  @Put("/:id")
   @HttpCode(HttpStatus.OK)
   async update(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param("id", new ParseUUIDPipe()) id: string,
     @Body() updateContractDto: ContractDto,
   ): Promise<ContractDto> {
     const contract = await this.contractService.update(id, updateContractDto);
     return plainToInstance(ContractDto, contract);
   }
 
-  @Delete('/:id')
+  @Delete("/:id")
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
+  async remove(@Param("id", new ParseUUIDPipe()) id: string): Promise<void> {
     await this.contractService.remove(id);
   }
 }
