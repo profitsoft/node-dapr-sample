@@ -12,4 +12,4 @@ RUN npx nest build
 
 EXPOSE 3000
 
-CMD ["node", "dist/main.js"]
+CMD ["npx", "ts-node", "src/main.ts"]
