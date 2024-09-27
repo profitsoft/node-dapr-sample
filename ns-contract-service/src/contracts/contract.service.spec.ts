@@ -5,7 +5,10 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
 import { DataSource } from "typeorm";
 import { testDatabaseConfig } from "../ormconfig.test";
-import { InternalServerErrorException } from "@nestjs/common";
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
 import { GenericContainer } from "testcontainers";
 
 describe("ContractService", () => {
@@ -179,13 +182,13 @@ describe("ContractService", () => {
       await service.remove(contract.id);
 
       await expect(service.findOne(contract.id)).rejects.toThrow(
-        InternalServerErrorException,
+        NotFoundException,
       );
     });
 
     it("should throw InternalServerErrorException if contract not found", async () => {
       await expect(service.remove("non-existing-id")).rejects.toThrow(
-        InternalServerErrorException,
+        NotFoundException,
       );
     });
   });

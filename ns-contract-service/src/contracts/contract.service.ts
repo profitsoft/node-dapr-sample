@@ -35,6 +35,9 @@ export class ContractService {
       }
       return contract;
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException("Failed to retrieve contract");
     }
   }
@@ -58,6 +61,9 @@ export class ContractService {
       Object.assign(contract, updatedData);
       return await this.contractRepository.save(contract);
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException("Failed to update contract");
     }
   }
@@ -68,10 +74,7 @@ export class ContractService {
       await this.findOne(id);
       await this.contractRepository.delete(id);
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException("Failed to delete contract");
+      throw new NotFoundException("Failed to delete contract");
     }
   }
 }
