@@ -1,7 +1,7 @@
 module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: './',
-  testRegex: '.*\\.spec\\.ts$',
+  testRegex: '.*\\.spec\\.e2e\\.ts$',
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
@@ -9,5 +9,6 @@ module.exports = {
   coverageDirectory: '../coverage',
   testEnvironment: 'node',
   testTimeout: 10000,
-  testPathIgnorePatterns: ['./test/e2e/'],
+  globalSetup: "./test/e2e/setup.ts",
+  globalTeardown: "./test/e2e/teardown.ts",
 };

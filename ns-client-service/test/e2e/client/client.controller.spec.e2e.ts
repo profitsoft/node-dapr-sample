@@ -1,8 +1,8 @@
-import { ClientService } from '../../src/client/client.service';
+import { ClientService } from '../../../src/client/client.service';
 import { Test } from '@nestjs/testing';
-import { ClientModule } from '../../src/client/client.module';
-import { DatabaseModule } from '../../src/db/database.module';
-import { ClientCreateDto } from '../../src/client/dto/client.createDto';
+import { ClientModule } from '../../../src/client/client.module';
+import { DatabaseModule } from '../../../src/db/database.module';
+import { ClientCreateDto } from '../../../src/client/dto/client.createDto';
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 
@@ -46,11 +46,14 @@ describe("Client Controller Test", () => {
 
     const tanos = await clientService.create(tanosSave, 1)
     const tony = await clientService.create(tonySave, 2)
-    const array = [tanos, tony]
+    const expectedArray = [
+      { id: 1, name: 'Tanos', address: 'Titan', tenantId: 1 },
+      { id: 2, name: 'Tony Stark', address: 'Genius, Billionaire, Playboy, Philanthropist', tenantId: 2 }
+    ];
     await request(app.getHttpServer())
       .get('/api/clients')
       .expect(302)
-      .expect(array);
+      .expect(expectedArray);
   });
 
   it("[GET/:id] Should return client by Id", async () => {
@@ -67,10 +70,12 @@ describe("Client Controller Test", () => {
 
     const tanos = await clientService.create(tanosSave, 1)
     const tony = await clientService.create(tonySave, 2)
+    const expectedClient = { id: 3, name: 'Tanos', address: 'Titan', tenantId: 1 };
+
     await request(app.getHttpServer())
       .get(`/api/clients/${tanos.id}`)
       .expect(302)
-      .expect(tanos);
+      .expect(expectedClient);
   });
 
   it("[GET/:id] Should return non found when not found by Id", async () => {
@@ -182,7 +187,6 @@ describe("Client Controller Test", () => {
 
     const tanos = await clientService.create(tanosSave, 1)
     const tony = await clientService.create(tonySave, 2)
-
 
     await request(app.getHttpServer())
       .delete(`/api/clients/${tanos.id}`)

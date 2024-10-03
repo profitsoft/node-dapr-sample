@@ -1,7 +1,7 @@
 import { ClientService } from "./client.service";
 import { Body, Controller, Delete, Get, Headers, HttpCode, HttpStatus, Param, Post, Put } from "@nestjs/common";
-import { ClientEntity } from "./client.entity";
 import { ClientCreateDto } from "./dto/client.createDto";
+import { ClientDto } from './dto/client.dto';
 
 
 @Controller('/api/clients')
@@ -13,29 +13,29 @@ export class ClientController {
 
   @Get()
   @HttpCode(HttpStatus.FOUND)
-  async findAll(): Promise<ClientEntity[]> {
+  async findAll(): Promise<ClientDto[]> {
     return await this.clientService.findAll()
   }
 
-  @Get(':id')
+  @Get('/:id')
   @HttpCode(HttpStatus.FOUND)
-  async findById(@Param('id') id: number): Promise<ClientEntity> {
+  async findById(@Param('id') id: number): Promise<ClientDto> {
     return await this.clientService.findById(id)
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createDto: ClientCreateDto, @Headers('tenantId') tenantId: string): Promise<ClientEntity> {
+  async create(@Body() createDto: ClientCreateDto, @Headers('tenantId') tenantId: string): Promise<ClientDto> {
     return await this.clientService.create(createDto, parseInt(tenantId))
   }
 
-  @Put(':id')
+  @Put('/:id')
   @HttpCode(HttpStatus.OK)
-  async update(@Body() createDto: ClientCreateDto, @Headers('tenantId') tenantId: string, @Param('id') id: number): Promise<ClientEntity> {
+  async update(@Body() createDto: ClientCreateDto, @Headers('tenantId') tenantId: string, @Param('id') id: number): Promise<ClientDto> {
     return await this.clientService.update(createDto, id, parseInt(tenantId))
   }
 
-  @Delete(':id')
+  @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteClient(@Param('id') id: number): Promise<void> {
     await this.clientService.delete(id);
