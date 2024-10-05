@@ -1,16 +1,19 @@
-import { ClientService } from '../../../src/client/client.service';
+import { ClientService } from '../../../src/service/client.service';
 import { Test } from '@nestjs/testing';
-import { ClientModule } from '../../../src/client/client.module';
+import { ClientModule } from '../../../src/client.module';
 import { DatabaseModule } from '../../../src/db/database.module';
-import { ClientCreateDto } from '../../../src/client/dto/client.createDto';
+import { ClientCreateDto } from '../../../src/dto/client.createDto';
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
+import { DataSource } from 'typeorm';
+import { getDataSourceToken } from '@nestjs/typeorm';
 
 
 
 describe("Client Controller Test", () => {
   let app: INestApplication
   let clientService: ClientService
+  let dataSource: DataSource
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -22,6 +25,8 @@ describe("Client Controller Test", () => {
     app = moduleRef.createNestApplication()
     await app.init()
     clientService = moduleRef.get(ClientService);
+    dataSource = moduleRef.get<DataSource>(getDataSourceToken());
+
   });
 
   afterAll(async () => {
@@ -29,7 +34,7 @@ describe("Client Controller Test", () => {
   })
 
   beforeEach(async () => {
-    await clientService.deleteAll()
+    await dataSource.synchronize(true)
   })
 
   it("[GET] Should return all clients", async () => {
@@ -44,15 +49,15 @@ describe("Client Controller Test", () => {
       address: "Genius, Billionaire, Playboy, Philanthropist"
     }
 
-    const tanos = await clientService.create(tanosSave, 1)
-    const tony = await clientService.create(tonySave, 2)
+    const tanos = await clientService.create(tanosSave, "1")
+    const tony = await clientService.create(tonySave, "2")
     const expectedArray = [
       { id: 1, name: 'Tanos', address: 'Titan', tenantId: 1 },
       { id: 2, name: 'Tony Stark', address: 'Genius, Billionaire, Playboy, Philanthropist', tenantId: 2 }
     ];
     await request(app.getHttpServer())
       .get('/api/clients')
-      .expect(302)
+      .expect(200)
       .expect(expectedArray);
   });
 
@@ -68,13 +73,13 @@ describe("Client Controller Test", () => {
       address: "Genius, Billionaire, Playboy, Philanthropist"
     }
 
-    const tanos = await clientService.create(tanosSave, 1)
-    const tony = await clientService.create(tonySave, 2)
-    const expectedClient = { id: 3, name: 'Tanos', address: 'Titan', tenantId: 1 };
+    const tanos = await clientService.create(tanosSave, "1")
+    const tony = await clientService.create(tonySave, "2")
+    const expectedClient = { id: 1, name: 'Tanos', address: 'Titan', tenantId: 1 };
 
     await request(app.getHttpServer())
       .get(`/api/clients/${tanos.id}`)
-      .expect(302)
+      .expect(200)
       .expect(expectedClient);
   });
 
@@ -90,8 +95,8 @@ describe("Client Controller Test", () => {
       address: "Genius, Billionaire, Playboy, Philanthropist"
     }
 
-    const tanos = await clientService.create(tanosSave, 1)
-    const tony = await clientService.create(tonySave, 2)
+    const tanos = await clientService.create(tanosSave, "1")
+    const tony = await clientService.create(tonySave, "2")
     await request(app.getHttpServer())
       .get(`/api/clients/1333`)
       .expect(404);
@@ -125,7 +130,7 @@ describe("Client Controller Test", () => {
       name: "TanosNotChanged",
       address: "TitanNotChanged"
     }
-    const tanos = await clientService.create(tanosSave, 1)
+    const tanos = await clientService.create(tanosSave, "1")
 
     const updateDto: ClientCreateDto = {
       name: "ChangedTanos",
@@ -154,7 +159,7 @@ describe("Client Controller Test", () => {
       name: "TanosNotChanged",
       address: "TitanNotChanged"
     }
-    const tanos = await clientService.create(tanosSave, 1)
+    const tanos = await clientService.create(tanosSave, "1")
 
     const updateDto: ClientCreateDto = {
       name: "ChangedTanos",
@@ -185,8 +190,8 @@ describe("Client Controller Test", () => {
       address: "Not deleted"
     }
 
-    const tanos = await clientService.create(tanosSave, 1)
-    const tony = await clientService.create(tonySave, 2)
+    const tanos = await clientService.create(tanosSave, "1")
+    const tony = await clientService.create(tonySave, "2")
 
     await request(app.getHttpServer())
       .delete(`/api/clients/${tanos.id}`)

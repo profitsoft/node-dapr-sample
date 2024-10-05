@@ -1,10 +1,10 @@
 import { INestApplication, NotFoundException, ValidationPipe } from '@nestjs/common';
-import { ClientService } from '../src/client/client.service';
+import { ClientService } from '../service/client.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ClientController } from '../src/client/client.controller';
-import { ClientEntity } from '../src/client/client.entity';
+import { ClientController } from './client.controller';
+import { ClientEntity } from '../entity/client.entity';
 import request from 'supertest';
-import { ClientCreateDto } from '../src/client/dto/client.createDto';
+import { ClientCreateDto } from '../dto/client.createDto';
 
 
 
@@ -28,8 +28,6 @@ describe("ClientController", () => {
 
 
   beforeEach(async () => {
-    const a = new ClientEntity()
-
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ClientController],
       providers: [
@@ -58,7 +56,7 @@ describe("ClientController", () => {
     it('success - should return all clients ', async () => {
       const response = await request(app.getHttpServer())
         .get("/api/clients")
-        .expect(302);
+        .expect(200);
 
       const expected = mockClients.map((client) => ({
         ...client,
@@ -75,7 +73,7 @@ describe("ClientController", () => {
 
       const response = await request(app.getHttpServer())
         .get("/api/clients/1")
-        .expect(302);
+        .expect(200);
 
       expect(response.body).toEqual({
         ...client1,
@@ -128,7 +126,7 @@ describe("ClientController", () => {
         expect.objectContaining({
           ...clientSaveDto,
         }),
-        expect.any(Number)
+        "1"
       );
     });
   });
@@ -161,7 +159,7 @@ describe("ClientController", () => {
           ...clientSaveDto,
         }),
         "1",
-        expect.any(Number)
+        "12"
       );
     });
 
@@ -179,6 +177,7 @@ describe("ClientController", () => {
 
       const response = await request(app.getHttpServer())
         .put(`/api/clients/1`)
+        .set('tenantId', '12')
         .send({
           ...clientSaveDto,
         })
@@ -192,7 +191,7 @@ describe("ClientController", () => {
           ...clientSaveDto,
         }),
         "1",
-        expect.any(Number)
+        "12"
       );
     });
   });
