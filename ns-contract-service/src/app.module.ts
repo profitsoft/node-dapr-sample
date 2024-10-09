@@ -5,6 +5,7 @@ import { ContractModule } from "./contracts/contract.module";
 import { Contract } from "./contracts/contract.entity";
 import { ConfigService } from "@nestjs/config";
 import { AppController } from "./app.controller";
+import { OpenTelemetryModule } from 'nestjs-otel';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { AppController } from "./app.controller";
       // TODO: Configure all env in src/config/config.ts when Google Cloud Datastore will be available.
       envFilePath: process.env.NODE_ENV === "test" ? ".env.test" : ".env",
     }),
+    OpenTelemetryModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

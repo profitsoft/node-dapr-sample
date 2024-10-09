@@ -1,10 +1,17 @@
-import { ValidationPipe } from "@nestjs/common";
+import { ValidationPipe, Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ConfigService } from "@nestjs/config";
+import sdk from './opentelemetry-sdk';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const logger = new Logger('Bootstrap');
+
+  await sdk.start();
+
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log'],
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -19,9 +26,8 @@ async function bootstrap() {
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>("PORT") || 3000;
 
-  console.log(`App is running on port ${port}`);
-
   await app.listen(port);
+  logger.log(`App is running on port ${port}`);
 }
 
 bootstrap();
