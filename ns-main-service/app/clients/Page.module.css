@@ -1,0 +1,18 @@
+.container {
+    padding-top: 2rem;
+}
+
+.cardLink {
+    text-decoration: none;
+    display: block;
+}
+
+.clientCard {}
+
+.cardLink:hover .clientCard {
+    background-color: rgba(239, 239, 243, 0.68);
+}
+
+.cardLink .clientCard {
+    transition: background-color 0.3s ease;
+}
