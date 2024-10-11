@@ -1,93 +1,92 @@
 .page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 80px;
-    font-family: var(--font-geist-sans);
-    background: var(--background);
-    color: var(--foreground);
-  }
-  
-  .title {
-    font-size: 32px;
-    margin-bottom: 40px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px;
+  font-family: var(--font-geist-sans);
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.title {
+  font-size: 32px;
+  margin-bottom: 40px;
+}
+
+.tableContainer {
+  background: rgba(255, 255, 255, 0.5); /* Напівпрозорий білий фон */
+  border: 1px solid rgba(0, 0, 0, 0.1); /* Легкий обвід */
+  border-radius: 8px; /* Заокруглені краї */
+  padding: 40px; /* Відступи всередині контейнера */
+  backdrop-filter: blur(10px); /* Опціонально: розмиття фону позаду */
+  max-width: 600px; /* Максимальна ширина контейнера */
+  width: 100%; /* Ширина 100% від батьківського елемента */
+}
+
+@media (prefers-color-scheme: dark) {
   .tableContainer {
-    background: rgba(255, 255, 255, 0.5); /* Напівпрозорий білий фон */
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Легкий обвід */
-    border-radius: 8px; /* Заокруглені краї */
-    padding: 40px; /* Відступи всередині контейнера */
-    backdrop-filter: blur(10px); /* Опціонально: розмиття фону позаду */
-    max-width: 600px; /* Максимальна ширина контейнера */
-    width: 100%; /* Ширина 100% від батьківського елемента */
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
-  @media (prefers-color-scheme: dark) {
-    .tableContainer {
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-  }
-  
-  .form {
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 15px 20px; /* row-gap column-gap */
-    justify-content: center;
-  }
-  
-  .label {
-    text-align: right;
-    font-weight: bold;
-    align-self: center;
-  }
-  
-  .input {
-    width: 100%;
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .buttonContainer {
-    grid-column: 1 / span 2;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .button {
-    padding: 10px 20px;
-    background-color: #000; /* Чорний фон */
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 999px; /* Пігулкова форма кнопки */
-    flex: none; /* Запобігає розтягуванню кнопок */
-  }
-  
-  .button:hover {
-    background-color: #333;
-  }
-  
-  .saveButton {
-    background-color: #000;
-    color: #fff;
-  }
-  
-  .saveButton:hover {
-    background-color: #333;
-  }
-  
-  .backButton {
-    background-color: #eaeaea;
-    color: #333;
-  }
-  
-  .backButton:hover {
-    background-color: #cacaca;
-  }
-  
+}
+
+.form {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 15px 20px; /* row-gap column-gap */
+  justify-content: center;
+}
+
+.label {
+  text-align: right;
+  font-weight: bold;
+  align-self: center;
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.buttonContainer {
+  grid-column: 1 / span 2;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: #000; /* Чорний фон */
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 999px; /* Пігулкова форма кнопки */
+  flex: none; /* Запобігає розтягуванню кнопок */
+}
+
+.button:hover {
+  background-color: #333;
+}
+
+.saveButton {
+  background-color: #000;
+  color: #fff;
+}
+
+.saveButton:hover {
+  background-color: #333;
+}
+
+.backButton {
+  background-color: #eaeaea;
+  color: #333;
+}
+
+.backButton:hover {
+  background-color: #cacaca;
+}

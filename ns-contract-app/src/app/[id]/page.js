@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
-import styles from './page.module.css';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import styles from "./page.module.css";
 
 export default function ContractDetail({ params }) {
   const router = useRouter();
@@ -11,26 +11,27 @@ export default function ContractDetail({ params }) {
 
   const [contract, setContract] = useState(null);
   const [formData, setFormData] = useState({
-    number: '',
-    signDate: '',
-    clientId: '',
-    tenantId: '',
+    number: "",
+    signDate: "",
+    clientId: "",
+    tenantId: "",
   });
 
   useEffect(() => {
     if (id) {
-      axios.get(`http://localhost:3000/contracts/${id}`)
-        .then(response => {
+      axios
+        .get(`http://localhost:3000/contracts/${id}`)
+        .then((response) => {
           setContract(response.data);
           setFormData({
             number: response.data.number,
-            signDate: response.data.signDate.split('T')[0],
+            signDate: response.data.signDate.split("T")[0],
             clientId: response.data.clientId,
             tenantId: response.data.tenantId,
           });
         })
-        .catch(error => {
-          console.error('Помилка при отриманні контракту:', error);
+        .catch((error) => {
+          console.error("Помилка при отриманні контракту:", error);
         });
     }
   }, [id]);
@@ -41,7 +42,7 @@ export default function ContractDetail({ params }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -49,17 +50,23 @@ export default function ContractDetail({ params }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.number || !formData.signDate || !formData.clientId || !formData.tenantId) {
-      alert('Будь ласка, заповніть всі поля');
+    if (
+      !formData.number ||
+      !formData.signDate ||
+      !formData.clientId ||
+      !formData.tenantId
+    ) {
+      alert("Будь ласка, заповніть всі поля");
       return;
     }
-    axios.put(`http://localhost:3000/contracts/${id}`, formData)
-      .then(response => {
-        alert('Дані контракту оновлено успішно');
-        router.push('/');
+    axios
+      .put(`http://localhost:3000/contracts/${id}`, formData)
+      .then((response) => {
+        alert("Дані контракту оновлено успішно");
+        router.push("/");
       })
-      .catch(error => {
-        console.error('Помилка при оновленні контракту:', error);
+      .catch((error) => {
+        console.error("Помилка при оновленні контракту:", error);
       });
   };
 
@@ -109,8 +116,19 @@ export default function ContractDetail({ params }) {
           />
 
           <div className={styles.buttonContainer}>
-            <button type="submit" className={`${styles.button} ${styles.saveButton}`}>Зберегти</button>
-            <button type="button" onClick={handleBack} className={`${styles.button} ${styles.backButton}`}>Назад</button>
+            <button
+              type="submit"
+              className={`${styles.button} ${styles.saveButton}`}
+            >
+              Зберегти
+            </button>
+            <button
+              type="button"
+              onClick={handleBack}
+              className={`${styles.button} ${styles.backButton}`}
+            >
+              Назад
+            </button>
           </div>
         </form>
       </div>
