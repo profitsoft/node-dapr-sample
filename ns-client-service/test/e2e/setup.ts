@@ -2,9 +2,7 @@ import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import { getDatasource } from './util';
 
 const init = async () => {
-  await Promise.all([
-    initPostgres()
-  ]);
+  await Promise.all([initPostgres()]);
 };
 
 const initPostgres = async () => {

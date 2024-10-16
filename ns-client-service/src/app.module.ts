@@ -3,10 +3,6 @@ import { ClientModule } from './client.module';
 import { DatabaseModule } from './db/database.module';
 
 @Module({
-  imports: [
-    DatabaseModule,
-    ClientModule,
-  ],
+  imports: [DatabaseModule, ClientModule],
 })
-
 export class AppModule {}

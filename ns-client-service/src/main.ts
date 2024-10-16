@@ -7,7 +7,7 @@ async function bootstrap() {
   app.enableCors();
 
   const configService = app.get<ConfigService>(ConfigService);
-  const port = configService.get<number>("APP_PORT") || 3000;
+  const port = configService.get<number>('APP_PORT') || 3000;
   console.log(`App is running on port ${port}`);
   await app.listen(port);
 }

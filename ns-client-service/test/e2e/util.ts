@@ -1,13 +1,13 @@
 import { DataSource } from 'typeorm';
 
-let datasource: DataSource
+let datasource: DataSource;
 
 export const getDatasource = async () => {
   if (datasource) {
     return datasource;
   }
   datasource = new DataSource({
-    type: "postgres",
+    type: 'postgres',
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
     database: process.env.DB_DATABASE,

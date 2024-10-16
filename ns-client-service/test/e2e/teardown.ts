@@ -1,4 +1,4 @@
-import { getDatasource } from "./util";
+import { getDatasource } from './util';
 
 const teardown = async () => {
   await globalThis.testContainer.stop();

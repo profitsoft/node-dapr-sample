@@ -2,16 +2,15 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('clients')
 export class ClientEntity extends BaseEntity {
-
   @PrimaryGeneratedColumn()
-  id?: number
+  id?: number;
 
   @Column()
-  name!: string
+  name!: string;
+
+  @Column({ nullable: true })
+  address?: string;
 
   @Column()
-  address?: string
-
-  @Column()
-  tenantId!: number
+  tenantId!: number;
 }

@@ -1,4 +1,11 @@
+import { IsNotEmpty, IsString } from 'class-validator';
+
 export class ClientCreateDto {
-  readonly name!: string
-  readonly address?: string
+
+  @IsString()
+  @IsNotEmpty()
+  readonly name!: string;
+
+  @IsString()
+  readonly address?: string;
 }

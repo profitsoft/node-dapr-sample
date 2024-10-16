@@ -1,13 +1,21 @@
-import { Repository } from "typeorm";
-import { ClientEntity } from "../entity/client.entity";
-import { InjectRepository } from "@nestjs/typeorm"
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { ClientCreateDto } from "../dto/client.createDto";
+import { Repository } from 'typeorm';
+import { ClientEntity } from '../entity/client.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
+import { ClientCreateDto } from '../dto/client.createDto';
 import { ClientDto } from '../dto/client.dto';
+import { plainToInstance } from 'class-transformer';
+import { ClientMapper } from '../util/client.mapper';
+import { PaginatedDto } from '../dto/paginated.dto';
+import { DEFAULT_PAGINATION_LIMIT, DEFAULT_PAGINATION_OFFSET } from '../constants/constants';
 
 @Injectable()
 export class ClientService {
-
   private readonly logger = new Logger(ClientService.name);
 
   constructor(
@@ -15,15 +23,23 @@ export class ClientService {
     private readonly clientRepository: Repository<ClientEntity>,
   ) {}
 
-  async findAll(): Promise<ClientDto[]> {
+  async findAll(limit?: number, offset?: number): Promise<PaginatedDto<ClientDto>> {
     try {
-      const clients = await this.clientRepository.find();  // DB request
-      return clients.map(client => this.toDto(client));
+      const [clients, total] = await this.clientRepository.findAndCount({
+        skip: offset || DEFAULT_PAGINATION_OFFSET,
+        take: limit || DEFAULT_PAGINATION_LIMIT,
+        order: {
+          id: 'DESC',
+        },
+      });
+      const dtos = clients.map((client) => ClientMapper.toDto(client));
+      return new PaginatedDto<ClientDto>(dtos, total, limit || DEFAULT_PAGINATION_LIMIT, offset || DEFAULT_PAGINATION_OFFSET);
     } catch (error) {
       if (error instanceof Error) {
-        this.logger.error(`Failed to fetch clients from the database: ${error.message}`, error);
+        this.logger.error(`Failed to fetch clients from the database: ${error.message}`, error,);
+        throw new Error('Could not retrieve clients. Try again letter');
       }
-      throw new Error('Could not retrieve clients. Try again letter');
+      throw error
     }
   }
 
@@ -33,48 +49,58 @@ export class ClientService {
       if (!client) {
         throw new NotFoundException(`Client with id ${id} not found`);
       }
-      return this.toDto(client);
+      return ClientMapper.toDto(client);
     } catch (e) {
-      if (e instanceof Error) {
-        this.logger.error(`Error finding client with id ${id}: ${e.message}`, e);
+      if (e instanceof NotFoundException) {
+        this.logger.warn(`Could not find client with id ${id}: ${e.message}`, e);
+        throw e;
       }
-      throw e;
+      this.logger.error(`Error finding client with id ${id}: ${e instanceof Error ? e.message : e}`);
+      throw new Error(`Unknown error occurred while finding client with id ${id}. Try again letter`);
     }
   }
 
-  async create(createDto: ClientCreateDto, tenantId: string): Promise<ClientDto> {
+  async create(
+    createDto: ClientCreateDto,
+    tenantId: string,
+  ): Promise<ClientDto> {
     try {
       this.validateTenantId(tenantId);
-      const newClient = this.fromCreateDto(createDto);
+      const newClient = plainToInstance(ClientEntity, createDto)
       newClient.tenantId = parseInt(tenantId);
       const savedClient = await this.clientRepository.save(newClient);
-      return this.toDto(savedClient);
+      return ClientMapper.toDto(savedClient);
     } catch (error) {
       if (error instanceof Error) {
         this.logger.error(`Error creating client: ${error.message}`, error);
       }
-      throw error;
+      throw new Error(`Unknown error occurred while creating client. Try again letter`);
     }
   }
 
-  async update(createDto: ClientCreateDto, id: number, tenantId: string): Promise<ClientDto> {
+  async update(
+    createDto: ClientCreateDto,
+    id: number,
+    tenantId: string,
+  ): Promise<ClientDto> {
     try {
       this.validateTenantId(tenantId);
       const client = await this.clientRepository.findOne({ where: { id } });
       if (!client) {
         throw new NotFoundException(`Client with ID ${id} not found`);
       }
-      Object.assign(client, {
-        ...createDto,
-        tenantId: parseInt(tenantId)
-      });
+      client.name = createDto.name
+      client.address = createDto.address
+      client.tenantId = parseInt(tenantId)
       const updatedClient = await this.clientRepository.save(client);
-      return this.toDto(updatedClient);
+      return ClientMapper.toDto(updatedClient);
     } catch (error) {
-      if (error instanceof Error) {
-        this.logger.error(`Error updating client with ID ${id}: ${error.message}`, error);
+      if (error instanceof NotFoundException) {
+        this.logger.warn(`Could not find client with id ${id}: ${error.message}`, error);
+        throw error;
       }
-      throw error;
+      this.logger.error(`Error updating client with ID ${id}: ${error instanceof Error ? error.message : error}`);
+      throw new Error(`Failed to update client with ID ${id}. Please try again later.`);
     }
   }
 
@@ -83,30 +109,10 @@ export class ClientService {
       await this.clientRepository.delete(id);
     } catch (error) {
       if (error instanceof Error) {
-        this.logger.error(`Error deleting client with ID ${id}: ${error.message}`, error);
+        this.logger.error(`Error deleting client with ID ${id}: ${error.message}`, error,);
       }
-      throw error;
+      throw new Error(`Unknown error occurred while deleting client with id ${id}. Try again letter`);
     }
-  }
-
-  async deleteAll(): Promise<void> {
-    await this.clientRepository.delete({});
-  }
-
-  private toDto(client: ClientEntity): ClientDto {
-    return new ClientDto(
-      client.id!,
-      client.tenantId,
-      client.name,
-      client.address,
-    )
-  }
-
-  private fromCreateDto(createDto: ClientCreateDto): ClientEntity {
-    const clientEntity = new ClientEntity()
-    clientEntity.address = createDto.address
-    clientEntity.name = createDto.name
-    return clientEntity
   }
 
   private validateTenantId(tenantId: string) {
@@ -114,5 +120,4 @@ export class ClientService {
       throw new BadRequestException('Invalid tenantId: it must be numeric.');
     }
   }
-
 }

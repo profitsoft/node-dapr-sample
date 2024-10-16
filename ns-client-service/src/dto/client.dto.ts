@@ -1,8 +1,8 @@
 export class ClientDto {
-  id?: number
-  name?: string
-  address?: string
-  tenantId: number
+  id?: number;
+  name?: string;
+  address?: string;
+  tenantId: number;
 
   constructor(id: number, tenantId: number, name?: string, address?: string) {
     this.id = id;
