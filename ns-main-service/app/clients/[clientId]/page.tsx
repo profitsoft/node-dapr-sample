@@ -1,110 +1,115 @@
 "use client"
-import { Container, Title, Text, Button, TextInput, Group } from '@mantine/core';
-import { useEffect, useState } from 'react';
-import { getClientById, saveClient, updateClient } from '@/app/api/actions/clients/clients';
-import { useRouter } from 'next/navigation';
+import { Button, Container, Group, Title } from '@mantine/core';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { CustomTextInput } from '@/components/CustomTextInput';
+import { useForm } from '@mantine/form';
 
-const ClientPage = ({ params }: { params: { clientId: string } }) => {
-  const { clientId } = params;
+
+const ClientPage = () => {
+  const { clientId } = useParams<{ clientId: string }>()
   const router = useRouter();
 
-  const [state, setState] = useState({
-    name: '',
-    address: '',
-    tenantId: '',
-    isEditing: false,
+  const [isEdit, setIsEdit] = useState(false);
+
+  const form = useForm({
+    initialValues: {
+      name: '',
+      address: '',
+      tenantId: '',
+    },
+    validate: {
+      name: (value) => (value.length === 0 ? 'Name is required' : null),
+      tenantId: (value) => (value.length === 0 || !parseInt(value) ? 'Tenant ID is required and should be a number' : null),
+    },
   });
 
   useEffect(() => {
-    const fetchClient = async() => {
-      if (clientId == 'new') {
-        setState({
-          ...state,
-          isEditing: true,
-        });
+    const fetchClient = async () => {
+      if (clientId === 'new') {
+        setIsEdit(true);
       } else {
-        const client = await getClientById(parseInt(clientId));
-        setState({
-          name: client.name || '',
-          address: client.address || '',
-          tenantId: client.tenantId || '',
-          isEditing: false,
+        const response = await fetch(`/api/clients/${clientId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch client');
+        }
+        const json = await response.json();
+        form.setValues({
+          ...json.client,
         });
+        setIsEdit(false);
       }
     };
     fetchClient();
   }, [clientId]);
 
-  const handleUpdate = async () => {
-    if (clientId == 'new') {
-      const newClient = await saveClient({
-        name: state.name!,
-        address: state.address,
-        tenantId: state.tenantId,
-      });
-      setState({...state, isEditing: false})
-      router.replace(`/clients/${newClient.id}`);
+  const handleSubmit = useCallback(
+    async (values: typeof form.values) => {
+      try {
+        const url = clientId === 'new' ? `/api/clients/new` : `/api/clients/${clientId}`;
+        const method = clientId === 'new' ? 'POST' : 'PUT';
+        const response = await fetch(url, {
+          method,
+          body: JSON.stringify({
+            name: values.name,
+            address: values.address,
+            tenantId: values.tenantId,
+          }),
+        });
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        const json = await response.json();
+        form.setValues(json.client);
+        setIsEdit(false);
+        if (clientId === 'new') {
+          router.replace(`/clients/${json.client.id}`);
+        }
+      } catch (error) {
+        console.error('Failed to submit client data:', error);
+      }
+    },
+    [clientId, form, router]
+  );
+
+  const handleEditMode = useCallback((value: boolean) => {
+    if (clientId === 'new') {
+      router.push(`/clients`);
     } else {
-      await updateClient({
-        id: parseInt(clientId),
-        name: state.name!,
-        address: state.address,
-        tenantId: state.tenantId,
-      });
-      setState({...state, isEditing: false})
+      setIsEdit(value);
     }
-  };
+  }, [clientId]);
 
   return (
     <Container mt="20px">
       <Title order={2}>Client Details</Title>
-
-      {state.isEditing ? (
-        <div>
-          <TextInput
-            label="Name"
-            value={state.name}
-            onChange={(event) => setState({ ...state, name: event.currentTarget.value })}
-            required
+      <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
+        {['name', 'address', 'tenantId'].map((field) => (
+          <CustomTextInput
+            key={form.key(field)}
+            label={field.charAt(0).toUpperCase() + field.slice(1)}
+            {...form.getInputProps(field)}
+            required={field === 'name' || field === 'tenantId'}
+            isEdit={isEdit}
+            error={typeof form.errors[field] === 'string' ? form.errors[field] as string : undefined}
           />
-          <TextInput
-            label="Address"
-            value={state.address}
-            onChange={(event) => setState({ ...state, address: event.currentTarget.value })}
-            required
-          />
-          <TextInput
-            label="Tenant ID"
-            value={state.tenantId}
-            onChange={(event) => setState({ ...state, tenantId: event.currentTarget.value })}
-            required
-          />
-          <Group  mt="md">
-            <Button onClick={handleUpdate}>Update Client</Button>
-            <Button
-              onClick={() => {
-                if (clientId === 'new') {
-                  router.push('/clients')
-                } else {
-                  setState({ ...state, isEditing: false });
-                }
-              }}
-              color='gray'
-            >
-              Cancel
-            </Button>
-          </Group>
-        </div>
-      ) : (
-        <div>
-          <Text size="lg">Name: {state.name}</Text>
-          <Text size="lg">Address: {state.address}</Text>
-          <Text size="lg">Tenant ID: {state.tenantId}</Text>
-          <Group mt="md">
-            <Button onClick={() => setState({ ...state, isEditing: true })}>Edit Client</Button>
-          </Group>
-        </div>
-      )}
+        ))}
+        <Group mt="md">
+          {isEdit ? (
+            <>
+              <Button type='submit'>Update Client</Button>
+              <Button
+                onClick={() => handleEditMode(false)}
+                color='gray'
+              >
+                Cancel
+              </Button>
+            </>
+          ) : (
+            <Button onClick={() => handleEditMode(true)}>Edit Client</Button>
+          )}
+        </Group>
+      </form>
     </Container>
   );
 };

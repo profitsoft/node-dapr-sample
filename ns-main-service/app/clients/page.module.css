@@ -7,8 +7,6 @@
     display: block;
 }
 
-.clientCard {}
-
 .cardLink:hover .clientCard {
     background-color: rgba(239, 239, 243, 0.68);
 }
