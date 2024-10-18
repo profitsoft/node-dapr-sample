@@ -3,7 +3,6 @@
   flex-direction: column;
   align-items: center;
   padding: 80px;
-  font-family: var(--font-geist-sans);
   background: var(--background);
   color: var(--foreground);
 }
@@ -14,13 +13,13 @@
 }
 
 .tableContainer {
-  background: rgba(255, 255, 255, 0.5); /* Напівпрозорий білий фон */
-  border: 1px solid rgba(0, 0, 0, 0.1); /* Легкий обвід */
-  border-radius: 8px; /* Заокруглені краї */
-  padding: 40px; /* Відступи всередині контейнера */
-  backdrop-filter: blur(10px); /* Опціонально: розмиття фону позаду */
-  max-width: 600px; /* Максимальна ширина контейнера */
-  width: 100%; /* Ширина 100% від батьківського елемента */
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 40px;
+  backdrop-filter: blur(10px);
+  max-width: 600px;
+  width: 100%;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -33,7 +32,7 @@
 .form {
   display: grid;
   grid-template-columns: auto auto;
-  gap: 15px 20px; /* row-gap column-gap */
+  gap: 15px 20px;
   justify-content: center;
 }
 
@@ -61,12 +60,12 @@
 
 .button {
   padding: 10px 20px;
-  background-color: #000; /* Чорний фон */
+  background-color: #000;
   color: white;
   border: none;
   cursor: pointer;
-  border-radius: 999px; /* Пігулкова форма кнопки */
-  flex: none; /* Запобігає розтягуванню кнопок */
+  border-radius: 999px;
+  flex: none;
 }
 
 .button:hover {
@@ -89,4 +88,10 @@
 
 .backButton:hover {
   background-color: #cacaca;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
