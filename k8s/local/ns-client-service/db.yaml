@@ -1,0 +1,73 @@
+# PersistentVolume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgre-clients-pv
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: "/mnt/data/postgresql"  # For development, this stores data on Minikube's local filesystem
+---
+# PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgre-clients-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# PostgreSQL Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgre-clients
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgre-clients
+  template:
+    metadata:
+      labels:
+        app: postgre-clients
+    spec:
+      containers:
+        - name: postgre-clients
+          image: postgres:13
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "ns-clients"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "master"
+          volumeMounts:
+            - name: postgre-clients-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgre-clients-storage
+          persistentVolumeClaim:
+            claimName: postgre-clients-pvc
+---
+# PostgreSQL Service (Renamed to db-contracts)
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgre-clients
+spec:
+  selector:
+    app: postgre-clients
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP  # Exposes PostgreSQL within the cluster

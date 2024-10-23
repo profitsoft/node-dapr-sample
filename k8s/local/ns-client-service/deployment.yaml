@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ns-client-service
+  labels:
+    app: ns-client-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ns-client-service
+  template:
+    metadata:
+      labels:
+        app: ns-client-service
+    spec:
+      containers:
+        - name: ns-client-service
+          image: local/ns-client-service:1.0.1
+          imagePullPolicy: IfNotPresent   # Prevents pulling from remote if image exists locally
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DB_HOST
+              value: "postgre-clients"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-clients-credentials
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-clients-credentials
+                  key: password
+            - name: DB_DATABASE
+              value: "ns-clients"

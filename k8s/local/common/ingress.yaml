@@ -21,10 +21,10 @@ spec:
                 name: ns-contract-service
                 port:
                   number: 80
-#          - path: /other-service
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: other-service
-#                port:
-#                  number: 80
+          - path: /api/client-service(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: ns-client-service
+                port:
+                  number: 81
