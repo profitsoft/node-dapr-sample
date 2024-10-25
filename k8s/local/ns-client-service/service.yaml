@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ns-client-service
+spec:
+  selector:
+    app: ns-client-service
+  ports:
+    - protocol: TCP
+      port: 81
+      targetPort: 3000
+  type: ClusterIP
