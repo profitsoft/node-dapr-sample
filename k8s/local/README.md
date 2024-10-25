@@ -11,7 +11,7 @@ minikube start
 minikube addons enable ingress
 ```
 
-his command sets up the environment variables in PowerShell to point Docker commands to the Docker daemon inside Minikube
+This command sets up the environment variables in PowerShell to point Docker commands to the Docker daemon inside Minikube
 ```
 & minikube -p minikube docker-env | Invoke-Expression
 ```
@@ -54,6 +54,16 @@ Execute `minikube ip` and copy minikube IP address.
 Open `hosts` file with Administrator permissions (`C:\Windows\System32\drivers\etc\hosts`) and add the following row into it
 ```
 {minikube ip} node-sample.local
+```
+
+### Configure Tunnel and Expose Ingress
+This command creates secure tunnel to the Minikube node, allowing external traffic to reach the NodePort and Service.*(Do not close the terminal after running.)*
+```
+minikube tunnel
+```
+To access Ingress over HTTPS from your local machine, run this command to set up a port-forward to the Ingress NGINX controller.
+```
+kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller 443
 ```
 
 When everything is done, you can open in your browser
