@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: master
       POSTGRES_DB: node-dapr-sample
     ports:
-      - "5432:5432"
+      - "5434:5432"
     networks:
       - my-network
 
@@ -17,8 +17,9 @@ services:
       - db
     environment:
       DATABASE_URL: "postgresql://postgres:master@db:5432/node-dapr-sample?schema=public"
+      NEXT_PUBLIC_CONTRACT_API_URL: ${NEXT_PUBLIC_CONTRACT_API_URL}
     ports:
-      - "3000:3000"
+      - "3001:3000"
     networks:
       - my-network
 
@@ -29,7 +30,7 @@ services:
       POSTGRES_PASSWORD: testpass
       POSTGRES_DB: node-dapr-test
     ports:
-      - "5433:5432"
+      - "5435:5432"
     networks:
       - my-network
 
@@ -39,6 +40,7 @@ services:
       - test-db
     environment:
       DATABASE_URL: "postgresql://postgres:testpass@test-db:5432/node-dapr-test?schema=public"
+      NEXT_PUBLIC_CONTRACT_API_URL: ${NEXT_PUBLIC_CONTRACT_API_URL}
     networks:
       - my-network
     command: ["npm", "run", "test"]

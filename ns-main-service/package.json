@@ -15,10 +15,12 @@
   },
   "dependencies": {
     "@mantine/core": "7.12.2",
+    "@mantine/form": "7.13.3",
     "@mantine/hooks": "7.12.2",
     "@mantine/styles": "6.0.22",
     "@prisma/client": "5.19.1",
     "@tabler/icons-react": "3.14.0",
+    "date-fns": "4.1.0",
     "dotenv": "16.4.5",
     "eslint-plugin-jest": "28.8.3",
     "log4js": "6.9.1",
