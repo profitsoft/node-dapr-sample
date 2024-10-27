@@ -28,3 +28,11 @@ spec:
                 name: ns-client-service
                 port:
                   number: 81
+
+          - path: /api/main-service(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: ns-main-service
+                port:
+                  number: 80
