@@ -23,15 +23,15 @@ describe("ContractController", () => {
       id: existingContractId1,
       number: "12345",
       signDate: new Date(),
-      clientId: "client1",
-      tenantId: "tenant1",
+      clientId: 1,
+      tenantId: 11,
     },
     {
       id: existingContractId2,
       number: "67890",
       signDate: new Date(),
-      clientId: "client2",
-      tenantId: "tenant2",
+      clientId: 2,
+      tenantId: 22,
     },
   ];
 
@@ -136,8 +136,8 @@ describe("ContractController", () => {
       const newContractDto: ContractDto = {
         number: "54321",
         signDate: new Date(),
-        clientId: "client3",
-        tenantId: "tenant3",
+        clientId: 3,
+        tenantId: 33,
       };
 
       const createdContract: Contract = {
@@ -170,8 +170,8 @@ describe("ContractController", () => {
     it("failure - validation error", async () => {
       const invalidContractDto = {
         signDate: new Date().toISOString(),
-        clientId: "client3",
-        tenantId: "tenant3",
+        clientId: 3,
+        tenantId: 33,
       }; // Missing 'number' field
 
       const response = await request(app.getHttpServer())
@@ -190,8 +190,8 @@ describe("ContractController", () => {
       const updateContractDto: ContractDto = {
         number: "updated-number",
         signDate: new Date(),
-        clientId: "client1",
-        tenantId: "tenant1",
+        clientId: 1,
+        tenantId: 11,
       };
 
       const updatedContract: Contract = {
@@ -227,8 +227,8 @@ describe("ContractController", () => {
       const updateContractDto: ContractDto = {
         number: "updated-number",
         signDate: new Date(),
-        clientId: "client1",
-        tenantId: "tenant1",
+        clientId: 1,
+        tenantId: 11,
       };
 
       jest

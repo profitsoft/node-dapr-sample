@@ -13,4 +13,7 @@ export class ClientEntity extends BaseEntity {
 
   @Column()
   tenantId!: number;
+
+  @Column({ nullable: true, default: 0 })
+  contractCount?: number;
 }

@@ -24,6 +24,12 @@ export class ClientTableCreate1725552036505 implements MigrationInterface {
             name: 'tenantId',
             type: 'int',
           },
+          {
+            name: 'contractCount',
+            type: 'int',
+            isNullable: true,
+            default: 0,
+          },
         ],
       }),
       true,

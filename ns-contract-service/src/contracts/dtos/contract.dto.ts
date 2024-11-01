@@ -1,4 +1,4 @@
-import { IsString, IsDate, IsNotEmpty } from "class-validator";
+import { IsString, IsDate, IsNotEmpty, IsNumber } from 'class-validator';
 import { Type } from "class-transformer";
 
 export class ContractDto {
@@ -11,11 +11,11 @@ export class ContractDto {
   @Type(() => Date)
   signDate!: Date;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  clientId!: string;
+  clientId!: number;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  tenantId!: string;
+  tenantId!: number;
 }

@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ContractModule } from "./contracts/contract.module";
+import { DaprModule } from './dapr/dapr.module';
 import { Contract } from "./contracts/contract.entity";
 import { ConfigService } from "@nestjs/config";
 import { AppController } from "./app.controller";
@@ -46,6 +47,7 @@ import { OpenTelemetryModule } from 'nestjs-otel';
       },
     }),
     ContractModule,
+    DaprModule,
   ],
   controllers: [AppController],
 })

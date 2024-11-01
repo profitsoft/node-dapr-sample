@@ -9,6 +9,8 @@ import { Repository } from "typeorm";
 import { Contract } from "./contract.entity";
 import { ContractDto } from "./dtos/contract.dto";
 import { plainToInstance } from "class-transformer";
+import { DaprService } from '../dapr/dapr.service';
+import { Action } from '../dapr/dtos/contract.event.dto';
 
 @Injectable()
 // TODO: Create a separate exception filter for handling exceptions from the contract repository when external services are involved.
@@ -18,6 +20,7 @@ export class ContractService {
   constructor(
     @InjectRepository(Contract)
     private contractRepository: Repository<Contract>,
+    private daprService: DaprService
   ) {}
 
   // TODO: Implement exception filtering for external service errors in findAll()
@@ -59,6 +62,7 @@ export class ContractService {
       const newContract = this.contractRepository.create(contract);
       const savedContract = await this.contractRepository.save(newContract);
       this.logger.log(`Contract created with id ${savedContract.id}`);
+      await this.daprService.publishContractEvent(savedContract, Action.CREATE);
       return savedContract;
     } catch (error) {
       this.logger.error('Failed to create contract', (error as Error).stack);
@@ -74,7 +78,9 @@ export class ContractService {
       const updatedData = plainToInstance(Contract, updateContractDto);
       Object.assign(contract, updatedData);
       this.logger.log(`Contract with id ${id} updated`);
-      return await this.contractRepository.save(contract);
+      const updatedContract = await this.contractRepository.save(contract);
+      await this.daprService.publishContractEvent(updatedContract, Action.UPDATE);
+      return updatedContract;
     } catch (error) {
       if (error instanceof NotFoundException) {
         this.logger.warn(error.message);
@@ -90,8 +96,9 @@ export class ContractService {
   async remove(id: string): Promise<void> {
     try {
       this.logger.log(`Deleting contract with id ${id}`);
-      await this.findOne(id);
+      const deletedContract = await this.findOne(id);
       await this.contractRepository.delete(id);
+      await this.daprService.publishContractEvent(deletedContract, Action.DELETE);
       this.logger.log(`Contract with id ${id} deleted`);
     } catch (error) {
       this.logger.error(`Failed to delete contract with id ${id}`, (error as Error).stack);

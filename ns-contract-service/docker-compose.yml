@@ -26,6 +26,30 @@ services:
     networks:
       - my-network
 
+  app-dapr:
+    image: "daprio/daprd:latest"
+    command: [
+      "./daprd",
+      "-app-id", "app",
+      "-app-port", "3000",
+      "-placement-host-address", "placement:50006",
+      "-dapr-http-port", "3500",
+      "-components-path", "/components"
+    ]
+    volumes:
+      - "./src/dapr/components:/components"
+    depends_on:
+      - app
+    network_mode: "service:app"
+
+  placement:
+    image: "daprio/dapr"
+    command: ["./placement", "-port", "50006"]
+    ports:
+      - "50006:50006"
+    networks:
+      - my-network
+
 networks:
   my-network:
     driver: bridge

@@ -8,6 +8,7 @@ export class ClientMapper {
       client.tenantId,
       client.name,
       client.address,
+      client.contractCount,
     );
   }
 }
