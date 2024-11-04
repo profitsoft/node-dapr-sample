@@ -3,5 +3,5 @@ type Contract = {
   number: string | null;
   signDate: Date | null;
   clientId: number | null;
-  tenantId: string | null;
+  tenantId: number | null;
 };
