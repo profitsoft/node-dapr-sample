@@ -65,14 +65,14 @@ describe("ContractService", () => {
       const contract1 = await service.create({
         number: "12345",
         signDate: new Date(),
-        clientId: "client1",
-        tenantId: "tenant1",
+        clientId: 1,
+        tenantId: 11,
       });
       const contract2 = await service.create({
         number: "67890",
         signDate: new Date(),
-        clientId: "client2",
-        tenantId: "tenant2",
+        clientId: 2,
+        tenantId: 22,
       });
 
       const contracts = await service.findAll();
@@ -92,8 +92,8 @@ describe("ContractService", () => {
       const contract = await service.create({
         number: "12345",
         signDate: new Date(),
-        clientId: "client1",
-        tenantId: "tenant1",
+        clientId: 1,
+        tenantId: 11,
       });
 
       const foundContract = await service.findOne(contract.id);
@@ -113,8 +113,8 @@ describe("ContractService", () => {
       const createContractDto = {
         number: "12345",
         signDate: new Date(),
-        clientId: "client1",
-        tenantId: "tenant1",
+        clientId: 1,
+        tenantId: 11,
       };
 
       const contract = await service.create(createContractDto);
@@ -130,8 +130,8 @@ describe("ContractService", () => {
         service.create({
           number: "12345",
           signDate: new Date(),
-          clientId: "client1",
-          tenantId: "tenant1",
+          clientId: 1,
+          tenantId: 11,
         }),
       ).rejects.toThrow(InternalServerErrorException);
 
@@ -144,15 +144,15 @@ describe("ContractService", () => {
       const contract = await service.create({
         number: "12345",
         signDate: new Date(),
-        clientId: "client1",
-        tenantId: "tenant1",
+        clientId: 1,
+        tenantId: 11,
       });
 
       const updatedContract = await service.update(contract.id, {
         number: "54321",
         signDate: new Date(),
-        clientId: "client1",
-        tenantId: "tenant1",
+        clientId: 1,
+        tenantId: 11,
       });
 
       expect(updatedContract.number).toEqual("54321");
@@ -163,8 +163,8 @@ describe("ContractService", () => {
         service.update("non-existing-id", {
           number: "54321",
           signDate: new Date(),
-          clientId: "client1",
-          tenantId: "tenant1",
+          clientId: 1,
+          tenantId: 11,
         }),
       ).rejects.toThrow(InternalServerErrorException);
     });
@@ -175,8 +175,8 @@ describe("ContractService", () => {
       const contract = await service.create({
         number: "12345",
         signDate: new Date(),
-        clientId: "client1",
-        tenantId: "tenant1",
+        clientId: 1,
+        tenantId: 11,
       });
 
       await service.remove(contract.id);

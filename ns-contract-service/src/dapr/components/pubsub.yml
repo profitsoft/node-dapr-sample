@@ -1,0 +1,57 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pubsub
+  namespace: default
+spec:
+  type: pubsub.gcp.pubsub
+  version: v1
+  metadata:
+    - name: projectId
+      value: pub-sub-438616
+    - name: type
+      value: service_account
+    - name: privateKeyId
+      value: 665da114ed46563b1520ce029686c1105b7342b7
+    - name: privateKey
+      value: |-
+        -----BEGIN PRIVATE KEY-----
+        MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDGUv2JE4jChydG
+        DZx7mESyyZ15xmhYx1N/wbho6AfXD8KyOd0CkD2A/AzDH3qHwkR3Y6RXPfDwPOPs
+        sT7f1+dEDrktLPedNfIZ2ur4mgcbNUunDOyZkZusdKusoQB8RuJ0i6hQgirdO8BE
+        nvfTbIu2WPQOtA8naxpm1p/R7WiW5pYGdD0MWlmRAvMidRcqIAVLMqH8243CdNa8
+        iCJPE+oqPdel5KFv4G3DG/tBF8KvU7HKaLHYUJo92TLQxlYiMBDa653lTnu2oGJt
+        p6zYYic6+R71c/MwfSQMsaYK2a/eAOVUOEmlJkzc9vggbDshJLxNv4/aJuix51Zk
+        p7Bh2jmJAgMBAAECggEAAf5s2dtSS0leT9YccgIng6gi/wnLfAQB/wVwsA5QIN2B
+        0rah9hAC7EhsbOxEuDdv5obgDLf80397N6KXDBtQsgaXXkDG2wPjM5cXuGjdBC0i
+        nfLzcH5OIztXjABg3777MRqD1k5etbNvdQknmu6rD2ngx0KQafAp12mWOP8y51x0
+        zf9vvYmzJd5inu0rARu3V2QcKlFfwi0Cw/R3jDCqeokq9P/+P8HrgcOO2b71PIzP
+        IdebPjnD4066pqUSxn9Ns0Ot78gDwvrU/uqPMHQGS/vAvQaua9GOMP980AEMm4OV
+        CmqbtwyBfNxAWZ1RJDtRp2rKVnhaogLG4WHZkqFJMQKBgQD3aC8FmtxgRjT/dASA
+        DV28eU3S9PGZoy8JJAfZurPsGb63Ff3uP12PqIuby9qMpxp6eWPDLixSzcbpPBaP
+        uBmF8/MjPcYMg/vj0if11kvP+NLj1Y0MKURIrQDatZFFbhGsliZdq7CcYQJeBpXA
+        EClJMuQ2qjACQkjRP9YiUe70mQKBgQDNNmM8aD0pM6xlTkLE8zJNDVwFNjtroLKq
+        fp8TC6vWjJQcdz+H0X7tkvAakW8lOYB9urT08k9c7MvU+GftC/tddxGn+7g1Tq2i
+        f+Qcm1UKqgQlvlxcBxXiZTTTfukVLS1qYQ2+EMiUgz6u18T+eLCBcBDqpLHxUbAk
+        0ioDmomScQKBgFSRtlESKHZ4STFw9QDYkMwWIvYTaGp+D1vuhwhz+4CfJEPtLom7
+        +z1Z/a7ZtfESRcjLqcBUDi6XzIB5W7Tw1ziktN29Be/NRdMQSTyNbgi/I0dh/f7E
+        NGUrTfl0yx2SjFQUVzT5tTsfJfICCjpGy/YLgVr2Pcbn5YAxc/7zRt0xAoGBAKqc
+        uD6lz4us2XzUZzDFnSFwpPv0Tcy6qzCS24CDKJfVAuLzxc8Ovv+YNaVxGr4RI6Hk
+        k8Q+nPr+KK1k5UqwtojLkNNftZQkWLoMqEOcZUTbe11B+hnNDkXOrO/VyMWBbQvP
+        qxRFce3/fCLzY2XKQ70pxfa/fO3MY60JSkL6vbwRAoGBALcihpyNJ74/uUzv+qtI
+        m2TUSSmljFHtj3sue5rbaCiZ0FzPERe29jK+iy/AeRQ3V9NFlo8BYiKUg/f3mm+M
+        h1cvcKHpLVGXWcll7v2PWrbI1EsVwIh/oTq+0ssNLPY7dyKddBVHRPR23C2p8Key
+        0Nh8677mpU+zVDV4R1EFbl5n
+        -----END PRIVATE KEY-----
+    - name: clientEmail
+      value: pub-sub@pub-sub-438616.iam.gserviceaccount.com
+    - name: clientId
+      value: 106757699476307496867
+    - name: authUri
+      value: https://accounts.google.com/o/oauth2/auth
+    - name: tokenUri
+      value: https://oauth2.googleapis.com/token
+    - name: authProviderX509CertUrl
+      value: https://www.googleapis.com/oauth2/v1/certs
+    - name: clientX509CertUrl
+      value: https://www.googleapis.com/robot/v1/metadata/x509/pub-sub%40pub-sub-438616.iam.gserviceaccount.com

@@ -5,25 +5,34 @@ import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 import { parseISO, format } from 'date-fns';
 import { useForm } from '@mantine/form';
-import { TextInput, Button, Group } from '@mantine/core';
+import { TextInput, NumberInput, Button, Group } from '@mantine/core';
 
-const ContractDetail = ({ params }: { params: { id: string } }) => {
+interface FormValues {
+  number: string;
+  signDate: string;
+  clientId?: number;
+  tenantId?: number;
+}
+
+const ContractDetail = ({ params }: { params: { id: number } }) => {
   const router = useRouter();
   const { id } = params;
 
-  const form = useForm({
+  const form = useForm<FormValues>({
     initialValues: {
       number: '',
       signDate: '',
-      clientId: '',
-      tenantId: '',
+      clientId: undefined,
+      tenantId: undefined,
     },
 
     validate: {
       number: (value: string) => (value ? null : 'Number is required'),
       signDate: (value: string) => (value ? null : 'Sign Date is required'),
-      clientId: (value: string) => (value ? null : 'Client ID is required'),
-      tenantId: (value: string) => (value ? null : 'Tenant ID is required'),
+      clientId: (value) =>
+        value !== undefined ? null : 'Client ID is required',
+      tenantId: (value) =>
+        value !== undefined ? null : 'Tenant ID is required',
     },
   });
 
@@ -40,8 +49,8 @@ const ContractDetail = ({ params }: { params: { id: string } }) => {
             signDate: data.signDate
               ? format(parseISO(data.signDate), 'yyyy-MM-dd')
               : '',
-            clientId: data.clientId || '',
-            tenantId: data.tenantId || '',
+            clientId: data.clientId !== null ? data.clientId : undefined,
+            tenantId: data.tenantId !== null ? data.tenantId : undefined,
           });
         }
       } catch (error) {
@@ -52,7 +61,8 @@ const ContractDetail = ({ params }: { params: { id: string } }) => {
     fetchContract();
   }, [id]);
 
-  const handleSubmit = async (values: typeof form.values) => {
+  const handleSubmit = async (values: FormValues) => {
+    console.log('Submitting values:', values);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_CONTRACT_API_URL}/contracts/${id}`,
@@ -68,6 +78,8 @@ const ContractDetail = ({ params }: { params: { id: string } }) => {
         alert('Contract data updated successfully');
         router.push('/contract');
       } else {
+        const errorData = await response.json();
+        console.error('Server error:', errorData);
         alert('Error updating contract');
       }
     } catch (error) {
@@ -98,17 +110,25 @@ const ContractDetail = ({ params }: { params: { id: string } }) => {
             required
           />
 
-          <TextInput
+          <NumberInput
             label="Client ID"
             placeholder="Enter client ID"
-            {...form.getInputProps('clientId')}
+            value={form.values.clientId}
+            onChange={(value) =>
+              form.setFieldValue('clientId', value as number | undefined)
+            }
+            error={form.errors.clientId}
             required
           />
 
-          <TextInput
+          <NumberInput
             label="Tenant ID"
             placeholder="Enter tenant ID"
-            {...form.getInputProps('tenantId')}
+            value={form.values.tenantId}
+            onChange={(value) =>
+              form.setFieldValue('tenantId', value as number | undefined)
+            }
+            error={form.errors.tenantId}
             required
           />
 

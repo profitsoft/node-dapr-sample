@@ -12,8 +12,8 @@ export class Contract {
   signDate!: Date;
 
   @Column()
-  clientId!: string;
+  clientId!: number;
 
   @Column()
-  tenantId!: string;
+  tenantId!: number;
 }

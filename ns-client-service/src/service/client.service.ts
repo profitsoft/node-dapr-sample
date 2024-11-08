@@ -13,6 +13,7 @@ import { plainToInstance } from 'class-transformer';
 import { ClientMapper } from '../util/client.mapper';
 import { PaginatedDto } from '../dto/paginated.dto';
 import { DEFAULT_PAGINATION_LIMIT, DEFAULT_PAGINATION_OFFSET } from '../constants/constants';
+import { Action, ContractData } from '../dto/contract.event.dto';
 
 @Injectable()
 export class ClientService {
@@ -112,6 +113,29 @@ export class ClientService {
         this.logger.error(`Error deleting client with ID ${id}: ${error.message}`, error,);
       }
       throw new Error(`Unknown error occurred while deleting client with id ${id}. Try again letter`);
+    }
+  }
+
+  async updateContractCount(
+    data: ContractData,
+  ): Promise<void> {
+    const client = await this.clientRepository.findOne({ where: { id: data.clientId, tenantId: data.tenantId } });
+
+    if (!client) {
+      throw new NotFoundException(`Client with ID ${data.clientId} and Tenant ID ${data.tenantId} not found`);
+    }
+    if (data.action === Action.CREATE) {
+      client.contractCount = (client.contractCount || 0) + 1;
+    }
+    if (data.action === Action.DELETE) {
+      client.contractCount = (client.contractCount || 0) - 1;
+    }
+    try {
+      await this.clientRepository.save(client);
+      this.logger.log(`Client contract count updated for client ID ${client.id}. New count: ${client.contractCount}`);
+    } catch (error) {
+      this.logger.error(`Failure contract count update for client ID ${ data.clientId }`, error);
+      throw new Error(`Unknown error occurred while update client with id ${data.clientId}. Try again letter`);
     }
   }
 
