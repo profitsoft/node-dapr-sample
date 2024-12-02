@@ -16,7 +16,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./jest.config.js",
     "prettier:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
-    "prettier:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
+    "prettier:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "migration:run": "npm run typeorm -- migration:run -d src/ormconfig.test.ts"
   },
   "engines": {
     "node": "20.17.0",
