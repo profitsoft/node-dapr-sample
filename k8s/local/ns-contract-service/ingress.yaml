@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ns-contract-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - node-sample.local
+      secretName: tls-secret
+  rules:
+    - host: node-sample.local
+      http:
+        paths:
+          # Explicitly handle /api/contract-service
+          - path: /api/contract-service(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: ns-contract-service
+                port:
+                  number: 80

@@ -2,35 +2,47 @@
 
 Here it's described how to build and run the app locally.
 
-## Installing Minikube
+## Installing Kubernetes in Docker Desktop
 
-Install minikube on Windows machine (from PowerShell in Admin mode):
-```
-choco install minikube
-minikube start
-minikube addons enable ingress
-```
-
-This command sets up the environment variables in PowerShell to point Docker commands to the Docker daemon inside Minikube
-```
-& minikube -p minikube docker-env | Invoke-Expression
-```
+Open Docker Desktop Settings and enable Kubernetes.
 
 ## Build and deploy
 
 ### Build docker images
 ```
+docker build -t local/ns-client-service:latest ./ns-client-service
 docker build -t local/ns-contract-service:latest ./ns-contract-service
+docker build -t local/ns-main-service:latest ./ns-main-service
 ```
 
 ### Deploy to Kubernetes
 
+Configure Ingress
+
+````
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+kubectl create secret tls tls-secret --key ./k8s/local/common/tls.key --cert ./k8s/local/common/tls.crt
+````
+
 This deploys to Kubernetes Postgresql specific for ns-contract-service and ns-contract-service itself. 
 ```
+kubectl apply -f ./k8s/local/ns-client-service/db.yaml
+kubectl apply -f ./k8s/local/ns-client-service/secret.yaml
+kubectl apply -f ./k8s/local/ns-client-service/deployment.yaml
+kubectl apply -f ./k8s/local/ns-client-service/service.yaml
+kubectl apply -f ./k8s/local/ns-client-service/ingress.yaml
+
 kubectl apply -f ./k8s/local/ns-contract-service/db.yaml
+kubectl apply -f ./k8s/local/ns-contract-service/secret.yaml
 kubectl apply -f ./k8s/local/ns-contract-service/deployment.yaml
 kubectl apply -f ./k8s/local/ns-contract-service/service.yaml
-kubectl apply -f ./k8s/local/ns-contract-service/secret.yaml
+kubectl apply -f ./k8s/local/ns-contract-service/ingress.yaml
+
+kubectl apply -f ./k8s/local/ns-main-service/db.yaml
+kubectl apply -f ./k8s/local/ns-main-service/secret.yaml
+kubectl apply -f ./k8s/local/ns-main-service/deployment.yaml
+kubectl apply -f ./k8s/local/ns-main-service/service.yaml
+kubectl apply -f ./kkubectl get pods -n ingress-nginx8s/local/ns-main-service/ingress.yaml
 ```
 
 Check pods state
@@ -43,31 +55,20 @@ Check services state
 kubectl get services
 ```
 
-Deploy ingress
+Check ingress state
 ```
-kubectl create secret tls tls-secret --key ./k8s/local/common/tls.key --cert ./k8s/local/common/tls.crt
-kubectl apply -f ./k8s/local/common/ingress.yaml
+kubectl get pods -n ingress-nginx
 ```
 
 ### Configure host name
-Execute `minikube ip` and copy minikube IP address.
 Open `hosts` file with Administrator permissions (`C:\Windows\System32\drivers\etc\hosts`) and add the following row into it
 ```
-{minikube ip} node-sample.local
+127.0.0.1 node-sample.local
 ```
 
-### Configure Tunnel and Expose Ingress
-This command creates secure tunnel to the Minikube node, allowing external traffic to reach the NodePort and Service.*(Do not close the terminal after running.)*
-```
-minikube tunnel
-```
-To access Ingress over HTTPS from your local machine, run this command to set up a port-forward to the Ingress NGINX controller.
-```
-kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller 443
-```
+### Opening the app
 
 When everything is done, you can open in your browser
 ```
-https://node-sample.local/api/contract-service/contracts
+https://node-sample.local
 ```
-It should return `[]` (empty contract list).

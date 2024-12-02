@@ -36,3 +36,7 @@ spec:
                 secretKeyRef:
                   name: db-main-credentials
                   key: url
+            - name: NEXT_PUBLIC_CONTRACT_API_URL
+              value: "https://node-sample.local/api/ns-contract-service"
+            - name: NEXT_PUBLIC_CLIENT_API_URL
+              value: "https://node-sample.local/api/ns-client-service"

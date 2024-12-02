@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: ns-client-service
-          image: local/ns-client-service:1.0.1
+          image: local/ns-client-service:latest
           imagePullPolicy: IfNotPresent   # Prevents pulling from remote if image exists locally
           ports:
             - containerPort: 3000
