@@ -4,16 +4,14 @@ import config from '@/config';
 export async function POST(request: Request) {
   const { name, address, tenantId } = await request.json();
 
-  const {
-    NEXT_PUBLIC_CLIENT_API_URL
-  } = config
+  const { NEXT_PUBLIC_CLIENT_API_URL } = config;
 
   try {
     const apiResponse = await fetch(`${NEXT_PUBLIC_CLIENT_API_URL}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'tenantId': tenantId,
+        tenantId: tenantId,
       },
       body: JSON.stringify({
         name,
