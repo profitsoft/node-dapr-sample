@@ -20,7 +20,7 @@ const getMenuItems = (): NavLink[] => {
     },
     {
       label: 'Clients',
-      link: '/clients'
+      link: '/clients',
     },
     {
       label: 'About',

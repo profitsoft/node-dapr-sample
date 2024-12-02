@@ -3,7 +3,7 @@ import { TextInput, Text } from '@mantine/core';
 
 interface CustomTextInputProps {
   label: string;
-  value: string;
+  value?: string;
   key: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   required: boolean;
@@ -11,7 +11,15 @@ interface CustomTextInputProps {
   error?: string | null;
 }
 
-export const CustomTextInput: React.FC<CustomTextInputProps> = ({ label, value, onChange, required, isEdit, key, error }) => (
+export const CustomTextInput: React.FC<CustomTextInputProps> = ({
+  label,
+  value,
+  onChange,
+  required,
+  isEdit,
+  key,
+  error,
+}) =>
   isEdit ? (
     <TextInput
       label={label}
@@ -22,6 +30,7 @@ export const CustomTextInput: React.FC<CustomTextInputProps> = ({ label, value, 
       error={error}
     />
   ) : (
-    <Text size="lg">{label}: {value}</Text>
-  )
-);
+    <Text size="lg">
+      {label}: {value}
+    </Text>
+  );
